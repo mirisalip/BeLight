@@ -139,6 +139,7 @@ nav a[aria-current="page"]{background:var(--taupe);color:#fff}
 .mine{display:grid;gap:18px;align-content:start}
 .mine .label{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-deep)}
 .step{border-top:1px dashed var(--line);padding-top:18px;display:grid;gap:6px}
+.step .note{font-size:.9rem;color:var(--muted,#7a6a60);margin-top:6px}
 @media (max-width:760px){.mood-panel{grid-template-columns:1fr}.mood-panel>div{padding:26px}}
 
 /* accordions */
@@ -230,6 +231,13 @@ nav a[aria-current="page"]{background:var(--taupe);color:#fff}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--light-soft,#FBEFD6)}
 .form-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
 .form-note{color:var(--sage-deep);font-weight:600}
+.form-hint{font-size:.88rem;color:var(--muted)}
+.ask{margin-top:48px}
+.ask h3{font-family:var(--serif);font-size:1.6rem;margin-bottom:8px}
+.ask>p{color:var(--muted);margin-bottom:18px}
+.community{margin-top:40px}
+.sub-title{font-family:var(--serif);font-size:1.6rem}
+.acc .asked{font:700 .78rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
 .honey{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .insta{font-weight:700;font-size:1.05rem}
 .copy{margin-left:auto;font:700 .85rem var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--taupe);cursor:pointer}
@@ -344,6 +352,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
           <div class="step">
             <p class="label"><span class="de">Dein kleiner Schritt heute</span><span class="en">Your small step today</span></p>
             <p id="m-step"></p>
+            <p class="note" id="m-note" hidden></p>
           </div>
         </div>
       </div>
@@ -405,6 +414,40 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
             <p class="tip en">Try this: today, tell someone you trust how you're really doing.</p>
           </div>
         </details>
+      </div>
+
+      <div class="acc narrow community" id="community" hidden>
+        <h3 class="sub-title"><span class="de">Eure Fragen</span><span class="en">Your questions</span></h3>
+        <!-- EURE FRAGEN: beantwortete anonyme Fragen direkt unter dieser Zeile einf&#xFC;gen. Der Bereich "Eure Fragen" erscheint automatisch, sobald eine Frage drin ist. Vorlage (ohne die Kommentarzeichen kopieren):
+          <details>
+            <summary><span class="de">FRAGE AUF DEUTSCH</span><span class="en">QUESTION IN ENGLISH</span></summary>
+            <div class="inner">
+              <p class="asked"><span class="de">Anonyme Frage</span><span class="en">Anonymous question</span></p>
+              <p class="de">MEINE ANTWORT AUF DEUTSCH</p>
+              <p class="en">MY ANSWER IN ENGLISH</p>
+            </div>
+          </details>
+        -->
+      </div>
+
+      <div class="ask narrow">
+        <h3><span class="de">Deine Situation ist nicht dabei?</span><span class="en">Your situation isn't here?</span></h3>
+        <p class="de">Frag mich anonym. Ich bekomme deine Frage per E-Mail, ohne Namen und ohne E-Mail-Adresse. Ausgew&#xE4;hlte Fragen beantworte ich dann hier auf der Seite, zusammen mit meiner Antwort.</p>
+        <p class="en">Ask me anonymously. I get your question by email, without a name or email address. I'll answer selected questions here on the page, together with my answer.</p>
+        <form class="cform" id="aform" action="https://formsubmit.co/miriamsalip1103@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Neue anonyme Frage &#xFC;ber BeLight (Glaube im Alltag)">
+          <input type="hidden" name="_template" value="table">
+          <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="field">
+            <label for="a-msg"><span class="de">Deine Situation oder Frage</span><span class="en">Your situation or question</span></label>
+            <textarea id="a-msg" name="Anonyme Frage" rows="5" required></textarea>
+          </div>
+          <p class="form-hint"><span class="de">Bitte schreib keine Namen oder Daten hinein, an denen man dich erkennen k&#xF6;nnte.</span><span class="en">Please don't include names or details that could identify you.</span></p>
+          <div class="form-foot">
+            <button class="btn" type="submit"><span class="de">Anonym fragen</span><span class="en">Ask anonymously</span></button>
+            <p class="form-note" id="aform-note" hidden></p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
@@ -639,68 +682,1333 @@ document.getElementById("to-about").addEventListener("click", () => document.get
 
 /* Moods: German verses Schlachter 2000, English verses KJV */
 const MOODS = [
-  {id:"einsam", name:{de:"Einsam", en:"Lonely"},
-   verses:[
-     {de:["Und siehe, ich bin bei euch alle Tage bis an das Ende der Weltzeit!", "Matth\u00E4us 28,20"], en:["Lo, I am with you alway, even unto the end of the world.", "Matthew 28:20"]},
-     {de:["Und wenn ich auch wanderte durchs Tal der Todesschatten, so f\u00FCrchte ich kein Ungl\u00FCck, denn du bist bei mir; dein Stecken und dein Stab, die tr\u00F6sten mich.", "Psalm 23,4"], en:["Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.", "Psalm 23:4"]},
-     {de:["Der HERR, dein Gott, geht selbst mit dir; er wird dich nicht aufgeben, noch dich verlassen!", "5. Mose 31,6"], en:["The LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.", "Deuteronomy 31:6"]},
-     {de:["Der HERR ist nahe denen, die zerbrochenen Herzens sind, und er hilft denen, die zerschlagenen Geistes sind.", "Psalm 34,19"], en:["The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.", "Psalm 34:18"]},
-     {de:["Ich will dich nicht aufgeben und dich niemals verlassen!", "Hebr\u00E4er 13,5"], en:["I will never leave thee, nor forsake thee.", "Hebrews 13:5"]}],
-   text:{de:"Wenn ich mich allein f\u00FChle, erinnere ich mich daran, dass ich es nie ganz bin. Auch an Tagen, an denen mich niemand zu sehen scheint.", en:"When I feel lonely, I remind myself that I'm never completely alone. Even on days when nobody seems to see me."},
-   step:{de:"Schreib einer Person, an die du lange nicht gedacht hast, eine kurze Nachricht.", en:"Send a short message to someone you haven't thought of in a long time."}},
-  {id:"ueberfordert", name:{de:"\u00DCberfordert", en:"Overwhelmed"},
-   verses:[
-     {de:["Kommt her zu mir alle, die ihr m\u00FChselig und beladen seid, so will ich euch erquicken!", "Matth\u00E4us 11,28"], en:["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28"]},
-     {de:["Wirf dein Anliegen auf den HERRN, und er wird f\u00FCr dich sorgen; er wird den Gerechten in Ewigkeit nicht wanken lassen!", "Psalm 55,23"], en:["Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.", "Psalm 55:22"]},
-     {de:["Alle eure Sorge werft auf ihn; denn er sorgt f\u00FCr euch.", "1. Petrus 5,7"], en:["Casting all your care upon him; for he careth for you.", "1 Peter 5:7"]},
-     {de:["Ich vermag alles durch den, der mich stark macht, Christus.", "Philipper 4,13"], en:["I can do all things through Christ which strengtheneth me.", "Philippians 4:13"]},
-     {de:["Lass dir an meiner Gnade gen\u00FCgen, denn meine Kraft wird in der Schwachheit vollkommen!", "2. Korinther 12,9"], en:["My grace is sufficient for thee: for my strength is made perfect in weakness.", "2 Corinthians 12:9"]}],
-   text:{de:"Wenn mir alles zu viel wird, darf ich die Last abgeben. Ich muss nicht alles allein tragen und auch nicht alles heute schaffen.", en:"When everything gets too much, I'm allowed to hand over the weight. I don't have to carry it all alone or get it all done today."},
-   step:{de:"Schreib alles auf, was dich gerade belastet, und streich eine Sache, die heute warten darf.", en:"Write down everything that weighs on you right now, and cross out one thing that can wait until tomorrow."}},
-  {id:"zweifelnd", name:{de:"Zweifelnd", en:"Doubting"},
-   verses:[
-     {de:["Ich glaube, Herr; hilf mir, [loszukommen] von meinem Unglauben!", "Markus 9,24"], en:["Lord, I believe; help thou mine unbelief.", "Mark 9:24"]},
-     {de:["Gl\u00FCckselig sind, die nicht sehen und doch glauben!", "Johannes 20,29"], en:["Blessed are they that have not seen, and yet have believed.", "John 20:29"]},
-     {de:["Es ist aber der Glaube eine feste Zuversicht auf das, was man hofft, eine \u00DCberzeugung von Tatsachen, die man nicht sieht.", "Hebr\u00E4er 11,1"], en:["Now faith is the substance of things hoped for, the evidence of things not seen.", "Hebrews 11:1"]},
-     {de:["Wenn es aber jemand unter euch an Weisheit mangelt, so erbitte er sie von Gott, der allen gern und ohne Vorwurf gibt, so wird sie ihm gegeben werden.", "Jakobus 1,5"], en:["If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.", "James 1:5"]},
-     {de:["Vertraue auf den HERRN von ganzem Herzen und verlass dich nicht auf deinen Verstand; erkenne Ihn auf allen deinen Wegen, so wird Er deine Pfade ebnen.", "Spr\u00FCche 3,5\u20136"], en:["Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.", "Proverbs 3:5\u20136"]}],
-   text:{de:"Die Bibel zeigt mir, dass Zweifel und Glaube nebeneinander Platz haben. Ich muss nicht perfekt glauben, um ehrlich zu glauben.", en:"The Bible shows me that doubt and faith can sit side by side. I don't have to believe perfectly to believe honestly."},
-   step:{de:"Formulier deine gr\u00F6\u00DFte Frage in einem Satz. Du musst sie heute nicht beantworten.", en:"Put your biggest question into one sentence. You don't have to answer it today."}},
-  {id:"aengstlich", name:{de:"\u00C4ngstlich", en:"Anxious"},
-   verses:[
-     {de:["F\u00FCrchte dich nicht, denn ich bin mit dir; sei nicht \u00E4ngstlich, denn ich bin dein Gott; ich st\u00E4rke dich, ich helfe dir auch, ja, ich erhalte dich durch die rechte Hand meiner Gerechtigkeit!", "Jesaja 41,10"], en:["Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.", "Isaiah 41:10"]},
-     {de:["Denn ich, der HERR, dein Gott, ergreife deine rechte Hand und sage dir: F\u00FCrchte dich nicht; ich helfe dir!", "Jesaja 41,13"], en:["For I the LORD thy God will hold thy right hand, saying unto thee, Fear not; I will help thee.", "Isaiah 41:13"]},
-     {de:["Denn Gott hat uns nicht einen Geist der Furchtsamkeit gegeben, sondern der Kraft und der Liebe und der Zucht.", "2. Timotheus 1,7"], en:["For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", "2 Timothy 1:7"]},
-     {de:["Wenn mir angst ist, vertraue ich auf dich!", "Psalm 56,4"], en:["What time I am afraid, I will trust in thee.", "Psalm 56:3"]},
-     {de:["Frieden hinterlasse ich euch; meinen Frieden gebe ich euch. Nicht wie die Welt gibt, gebe ich euch; euer Herz erschrecke nicht und verzage nicht!", "Johannes 14,27"], en:["Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.", "John 14:27"]}],
-   text:{de:"Angst verschwindet bei mir nicht einfach. Aber ich merke, dass ich trotzdem weitergehen kann, weil ich nicht allein gehe.", en:"My fear doesn't just disappear. But I notice that I can keep going anyway, because I'm not walking alone."},
-   step:{de:"Atme viermal tief ein und aus und mach dann den kleinsten Schritt, der dir einf\u00E4llt.", en:"Take four deep breaths, then take the smallest step you can think of."}},
-  {id:"dankbar", name:{de:"Dankbar", en:"Grateful"},
-   verses:[
-     {de:["Dankt dem HERRN, denn er ist g\u00FCtig, ja, seine Gnade w\u00E4hrt ewiglich!", "Psalm 118,1"], en:["O give thanks unto the LORD; for he is good: because his mercy endureth for ever.", "Psalm 118:1"]},
-     {de:["Seid in allem dankbar; denn das ist der Wille Gottes in Christus Jesus f\u00FCr euch.", "1. Thessalonicher 5,18"], en:["In every thing give thanks: for this is the will of God in Christ Jesus concerning you.", "1 Thessalonians 5:18"]},
-     {de:["Lobe den HERRN, meine Seele, und vergiss nicht, was er dir Gutes getan hat!", "Psalm 103,2"], en:["Bless the LORD, O my soul, and forget not all his benefits.", "Psalm 103:2"]},
-     {de:["Dankt dem HERRN, denn er ist g\u00FCtig; denn seine Gnade w\u00E4hrt ewiglich!", "Psalm 136,1"], en:["O give thanks unto the LORD; for he is good: for his mercy endureth for ever.", "Psalm 136:1"]},
-     {de:["Geht ein zu seinen Toren mit Danken, zu seinen Vorh\u00F6fen mit Loben; dankt ihm, preist seinen Namen!", "Psalm 100,4"], en:["Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name.", "Psalm 100:4"]}],
-   text:{de:"Gute Tage halte ich bewusst fest. Sie erinnern mich an schweren Tagen daran, dass es wieder hell wird.", en:"I hold on to good days on purpose. On hard days they remind me that the light comes back."},
-   step:{de:"Schreib drei Dinge auf, f\u00FCr die du heute dankbar bist, und erz\u00E4hl einer Person davon.", en:"Write down three things you're grateful for today, and tell one person about them."}},
-  {id:"ziellos", name:{de:"Ziellos", en:"Lost"},
-   verses:[
-     {de:["Denn ich wei\u00DF, was f\u00FCr Gedanken ich \u00FCber euch habe, spricht der HERR, Gedanken des Friedens und nicht des Unheils, um euch eine Zukunft und eine Hoffnung zu geben.", "Jeremia 29,11"], en:["For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.", "Jeremiah 29:11"]},
-     {de:["Das Herz des Menschen denkt sich seinen Weg aus, aber der HERR lenkt seine Schritte.", "Spr\u00FCche 16,9"], en:["A man's heart deviseth his way: but the LORD directeth his steps.", "Proverbs 16:9"]},
-     {de:["Ich will dich unterweisen und dir den Weg zeigen, auf dem du wandeln sollst; ich will dir raten, mein Auge auf dich richten.", "Psalm 32,8"], en:["I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.", "Psalm 32:8"]},
-     {de:["Denn wir sind seine Sch\u00F6pfung, erschaffen in Christus Jesus zu guten Werken, die Gott zuvor bereitet hat, damit wir in ihnen wandeln sollen.", "Epheser 2,10"], en:["For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.", "Ephesians 2:10"]}],
-   text:{de:"Ich wei\u00DF auch nicht immer, wohin mein Weg f\u00FChrt. Aber ich vertraue darauf, dass er einen Sinn hat, auch wenn ich ihn noch nicht sehe.", en:"I don't always know where my path leads either. But I trust that it has a purpose, even if I can't see it yet."},
-   step:{de:"\u00DCberleg dir eine Sache, die dir Freude macht, und gib ihr heute zehn Minuten.", en:"Think of one thing that brings you joy, and give it ten minutes today."}},
-  {id:"hoffnungslos", name:{de:"Hoffnungslos", en:"Hopeless"},
-   verses:[
-     {de:["Der Gott der Hoffnung aber erf\u00FClle euch mit aller Freude und mit Frieden im Glauben, dass ihr \u00FCberstr\u00F6mt in der Hoffnung durch die Kraft des Heiligen Geistes!", "R\u00F6mer 15,13"], en:["Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.", "Romans 15:13"]},
-     {de:["Gnadenbeweise des HERRN sind\u2019s, dass wir nicht g\u00E4nzlich aufgerieben wurden, denn seine Barmherzigkeit ist nicht zu Ende; sie ist jeden Morgen neu, und deine Treue ist gro\u00DF!", "Klagelieder 3,22\u201323"], en:["It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations 3:22\u201323"]},
-     {de:["Was betr\u00FCbst du dich, meine Seele, und bist so unruhig in mir? Harre auf Gott, denn ich werde ihm noch danken f\u00FCr die Rettung, die von seinem Angesicht kommt!", "Psalm 42,6"], en:["Why art thou cast down, O my soul? and why art thou disquieted in me? hope thou in God: for I shall yet praise him for the help of his countenance.", "Psalm 42:5"]},
-     {de:["Wir wissen aber, dass denen, die Gott lieben, alle Dinge zum Besten dienen, denen, die nach dem Vorsatz berufen sind.", "R\u00F6mer 8,28"], en:["And we know that all things work together for good to them that love God, to them who are the called according to his purpose.", "Romans 8:28"]},
-     {de:["Aber die auf den HERRN harren, kriegen neue Kraft, dass sie auffahren mit Fl\u00FCgeln wie Adler, dass sie laufen und nicht matt werden, dass sie wandeln und nicht m\u00FCde werden.", "Jesaja 40,31"], en:["But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.", "Isaiah 40:31"]}],
-   text:{de:"Es gab Zeiten, in denen ich selbst keine Hoffnung mehr gesehen habe. Hoffnung musste ich nicht selbst machen. Sie wurde mir geschenkt, Schritt f\u00FCr Schritt.", en:"There were times when I couldn't see any hope myself. I didn't have to create hope on my own. It was given to me, step by step."},
-   step:{de:"Sprich heute mit jemandem dar\u00FCber, wie es dir geht. Wenn es dir sehr schlecht geht, hol dir Hilfe, zum Beispiel bei der Dargebotenen Hand unter 143.", en:"Talk to someone today about how you're doing. If you're feeling really bad, get help, for example from Die Dargebotene Hand in Switzerland by calling 143."}}
+{
+"id": "einsam",
+"name": {
+"de": "Einsam",
+"en": "Lonely"
+},
+"verses": [
+{
+"de": [
+"Und siehe, ich bin bei euch alle Tage bis an das Ende der Weltzeit!",
+"Matth\u00E4us 28,20"
+],
+"en": [
+"Lo, I am with you alway, even unto the end of the world.",
+"Matthew 28:20"
+],
+"help": {
+"de": "Alle Tage hei\u00DFt auch die ganz gew\u00F6hnlichen. Wenn ich mich allein f\u00FChle, erinnere ich mich daran, dass Jesus auch an einem langweiligen Dienstag bei mir ist.",
+"en": "Always includes the ordinary days. When I feel lonely, I remind myself that Jesus is with me even on a boring Tuesday."
+},
+"step": {
+"de": "Sag heute einmal leise: Du bist jetzt da. Mach dann weiter mit dem, was du gerade tust.",
+"en": "Say quietly once today: You are here right now. Then carry on with what you're doing."
+}
+},
+{
+"de": [
+"Und wenn ich auch wanderte durchs Tal der Todesschatten, so f\u00FCrchte ich kein Ungl\u00FCck, denn du bist bei mir; dein Stecken und dein Stab, die tr\u00F6sten mich.",
+"Psalm 23,4"
+],
+"en": [
+"Yea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.",
+"Psalm 23:4"
+],
+"help": {
+"de": "Der Vers verspricht nicht, dass es kein dunkles Tal gibt. Er verspricht, dass ich nicht allein durchgehe. Das tr\u00F6stet mich mehr als jede schnelle L\u00F6sung.",
+"en": "This verse doesn't promise there will be no dark valley. It promises I won't walk through it alone. That comforts me more than any quick fix."
+},
+"step": {
+"de": "Geh heute zehn Minuten spazieren und stell dir vor, dass jemand neben dir geht.",
+"en": "Go for a ten-minute walk today and imagine someone walking beside you."
+}
+},
+{
+"de": [
+"Der HERR, dein Gott, geht selbst mit dir; er wird dich nicht aufgeben, noch dich verlassen!",
+"5. Mose 31,6"
+],
+"en": [
+"The LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.",
+"Deuteronomy 31:6"
+],
+"help": {
+"de": "Menschen ziehen manchmal weiter, Freundschaften ver\u00E4ndern sich. Gott gibt mich nicht auf. Daran halte ich mich fest, wenn andere gerade fehlen.",
+"en": "People sometimes move on and friendships change. God doesn't give up on me. I hold on to that when others aren't there."
+},
+"step": {
+"de": "Denk an eine Person, die dich nicht aufgegeben hat, und sag ihr heute Danke.",
+"en": "Think of someone who hasn't given up on you, and thank them today."
+}
+},
+{
+"de": [
+"Der HERR ist nahe denen, die zerbrochenen Herzens sind, und er hilft denen, die zerschlagenen Geistes sind.",
+"Psalm 34,19"
+],
+"en": [
+"The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.",
+"Psalm 34:18"
+],
+"help": {
+"de": "Wenn mein Herz wehtut, ist Gott nicht weiter weg, sondern n\u00E4her. Ich muss mich nicht zuerst zusammenrei\u00DFen, um zu ihm zu kommen.",
+"en": "When my heart hurts, God isn't further away but closer. I don't have to pull myself together before I come to him."
+},
+"step": {
+"de": "Schreib in ein paar ehrlichen S\u00E4tzen auf, was dir gerade wehtut. Niemand muss es lesen.",
+"en": "Write a few honest sentences about what hurts right now. Nobody has to read them."
+}
+},
+{
+"de": [
+"Ich will dich nicht aufgeben und dich niemals verlassen!",
+"Hebr\u00E4er 13,5"
+],
+"en": [
+"I will never leave thee, nor forsake thee.",
+"Hebrews 13:5"
+],
+"help": {
+"de": "Niemals ist ein gro\u00DFes Wort. Ich sage es mir vor, wenn ich mich vergessen f\u00FChle, und merke, dass es st\u00E4rker ist als mein Gef\u00FChl.",
+"en": "Never is a big word. I say it to myself when I feel forgotten, and I notice it's stronger than my feeling."
+},
+"step": {
+"de": "Schreib den Vers auf einen Zettel und leg ihn dorthin, wo du ihn morgen fr\u00FCh siehst.",
+"en": "Write the verse on a note and put it where you'll see it tomorrow morning."
+}
+},
+{
+"de": [
+"Wenn auch mein Vater und meine Mutter mich verlassen, so nimmt doch der HERR mich auf.",
+"Psalm 27,10"
+],
+"en": [
+"When my father and my mother forsake me, then the LORD will take me up.",
+"Psalm 27:10"
+],
+"help": {
+"de": "Selbst die Menschen, die uns am n\u00E4chsten sind, k\u00F6nnen uns nicht alles geben. Bei Gott bin ich immer willkommen, auch wenn ich mich sonst nirgends zugeh\u00F6rig f\u00FChle.",
+"en": "Even the people closest to us can't give us everything. With God I'm always welcome, even when I don't feel I belong anywhere else."
+},
+"step": {
+"de": "Such dir heute einen Ort, an dem du dich willkommen f\u00FChlst, und verbring dort ein paar Minuten.",
+"en": "Find a place today where you feel welcome, and spend a few minutes there."
+}
+},
+{
+"de": [
+"Kann auch eine Frau ihr Kindlein vergessen, dass sie sich nicht erbarmt \u00FCber ihren leiblichen Sohn? Selbst wenn sie [ihn] vergessen sollte, ich will dich nicht vergessen!",
+"Jesaja 49,15"
+],
+"en": [
+"Can a woman forget her sucking child, that she should not have compassion on the son of her womb? yea, they may forget, yet will I not forget thee.",
+"Isaiah 49:15"
+],
+"help": {
+"de": "Mich ber\u00FChrt, wie z\u00E4rtlich Gott hier spricht. Auch wenn ich mich \u00FCbersehen f\u00FChle, hat er mich nicht vergessen.",
+"en": "It touches me how tenderly God speaks here. Even when I feel overlooked, he hasn't forgotten me."
+},
+"step": {
+"de": "Schreib jemandem, der vielleicht auch gerade \u00FCbersehen wird, eine liebe Nachricht.",
+"en": "Send a kind message to someone who might be feeling overlooked too."
+}
+},
+{
+"de": [
+"N\u00E4hme ich Fl\u00FCgel der Morgenr\u00F6te und lie\u00DFe mich nieder am \u00E4u\u00DFersten Ende des Meeres, so w\u00FCrde auch dort deine Hand mich f\u00FChren und deine Rechte mich halten!",
+"Psalm 139,9\u201310"
+],
+"en": [
+"If I take the wings of the morning, and dwell in the uttermost parts of the sea; Even there shall thy hand lead me, and thy right hand shall hold me.",
+"Psalm 139:9\u201310"
+],
+"help": {
+"de": "Es gibt keinen Ort, an dem ich zu weit weg bin. Das hilft mir an Abenden, an denen ich mich innerlich weit weg von allen f\u00FChle.",
+"en": "There's no place where I'm too far away. That helps me on evenings when I feel far away from everyone inside."
+},
+"step": {
+"de": "Schau heute bewusst einmal in den Himmel und denk daran, dass Gottes Hand dich h\u00E4lt.",
+"en": "Look up at the sky on purpose once today and remember that God's hand is holding you."
+}
+},
+{
+"de": [
+"Ich lasse euch nicht als Waisen zur\u00FCck; ich komme zu euch.",
+"Johannes 14,18"
+],
+"en": [
+"I will not leave you comfortless: I will come to you.",
+"John 14:18"
+],
+"help": {
+"de": "Jesus wartet nicht, bis ich den Weg zu ihm finde. Er kommt zu mir. Das nimmt mir den Druck, alles allein schaffen zu m\u00FCssen.",
+"en": "Jesus doesn't wait for me to find my way to him. He comes to me. That takes away the pressure to manage everything alone."
+},
+"step": {
+"de": "Nimm dir heute f\u00FCnf Minuten Ruhe ohne Handy und sag Gott einfach, wie dein Tag war.",
+"en": "Take five quiet minutes today without your phone and simply tell God how your day was."
+}
+},
+{
+"de": [
+"Der HERR, dein Gott, ist in deiner Mitte, ein Held, der rettet; er wird sich \u00FCber dich freuen mit Wonne, er wird still sein in seiner Liebe, er wird \u00FCber dich jubelnd frohlocken.",
+"Zefanja 3,17"
+],
+"en": [
+"The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.",
+"Zephaniah 3:17"
+],
+"help": {
+"de": "Gott freut sich \u00FCber mich, nicht erst, wenn ich etwas leiste. Wenn ich mich ungeliebt f\u00FChle, lese ich diesen Vers langsam und lasse ihn wirken.",
+"en": "God rejoices over me, not only once I achieve something. When I feel unloved, I read this verse slowly and let it sink in."
+},
+"step": {
+"de": "H\u00F6r dir heute ein Lied an, das dir guttut, und h\u00F6r nur zu, ohne nebenbei etwas anderes zu machen.",
+"en": "Listen to a song that does you good today, and just listen without doing anything else."
+}
+}
+]
+},
+{
+"id": "ueberfordert",
+"name": {
+"de": "\u00DCberfordert",
+"en": "Overwhelmed"
+},
+"verses": [
+{
+"de": [
+"Kommt her zu mir alle, die ihr m\u00FChselig und beladen seid, so will ich euch erquicken!",
+"Matth\u00E4us 11,28"
+],
+"en": [
+"Come unto me, all ye that labour and are heavy laden, and I will give you rest.",
+"Matthew 11:28"
+],
+"help": {
+"de": "Jesus sagt nicht: Streng dich mehr an. Er sagt: Komm her. Wenn alles zu viel wird, darf ich zuerst einmal zur Ruhe kommen.",
+"en": "Jesus doesn't say: try harder. He says: come to me. When everything gets too much, I'm allowed to rest first."
+},
+"step": {
+"de": "Mach heute eine echte Pause von f\u00FCnfzehn Minuten, ohne schlechtes Gewissen.",
+"en": "Take a real fifteen-minute break today, without feeling guilty."
+}
+},
+{
+"de": [
+"Wirf dein Anliegen auf den HERRN, und er wird f\u00FCr dich sorgen; er wird den Gerechten in Ewigkeit nicht wanken lassen!",
+"Psalm 55,23"
+],
+"en": [
+"Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved.",
+"Psalm 55:22"
+],
+"help": {
+"de": "Werfen ist kein vorsichtiges Abgeben. Ich darf meine Last richtig loslassen, statt sie immer wieder zur\u00FCckzunehmen.",
+"en": "Casting isn't a careful handover. I'm allowed to really let go of my burden instead of picking it up again and again."
+},
+"step": {
+"de": "Schreib alles auf, was dich gerade belastet, und streich eine Sache, die heute warten darf.",
+"en": "Write down everything that weighs on you, and cross out one thing that can wait until tomorrow."
+}
+},
+{
+"de": [
+"Alle eure Sorge werft auf ihn; denn er sorgt f\u00FCr euch.",
+"1. Petrus 5,7"
+],
+"en": [
+"Casting all your care upon him; for he careth for you.",
+"1 Peter 5:7"
+],
+"help": {
+"de": "Alle hei\u00DFt auch die kleinen Sorgen, die ich f\u00FCr zu unwichtig halte. Gott interessiert sich auch f\u00FCr meine Pr\u00FCfung und meinen vollen Kalender.",
+"en": "All includes the small worries I think are too unimportant. God cares about my exam and my full calendar too."
+},
+"step": {
+"de": "Bete heute f\u00FCr eine ganz konkrete Sorge, auch wenn sie dir klein vorkommt.",
+"en": "Pray today about one very specific worry, even if it seems small."
+}
+},
+{
+"de": [
+"Ich vermag alles durch den, der mich stark macht, Christus.",
+"Philipper 4,13"
+],
+"en": [
+"I can do all things through Christ which strengtheneth me.",
+"Philippians 4:13"
+],
+"help": {
+"de": "Im Studium dachte ich oft, ich schaffe das nicht. Dieser Vers erinnert mich daran, dass die Kraft nicht nur aus mir kommen muss.",
+"en": "During my studies I often thought I couldn't do it. This verse reminds me that the strength doesn't have to come from me alone."
+},
+"step": {
+"de": "Fang mit der Aufgabe an, die du am meisten vor dir herschiebst, aber nur f\u00FCr zehn Minuten.",
+"en": "Start the task you've been putting off the most, but only for ten minutes."
+}
+},
+{
+"de": [
+"Lass dir an meiner Gnade gen\u00FCgen, denn meine Kraft wird in der Schwachheit vollkommen!",
+"2. Korinther 12,9"
+],
+"en": [
+"My grace is sufficient for thee: for my strength is made perfect in weakness.",
+"2 Corinthians 12:9"
+],
+"help": {
+"de": "Ich muss nicht immer stark sein. Gerade da, wo ich nicht mehr kann, darf Gott wirken. Das macht mich ehrlicher mit mir selbst.",
+"en": "I don't always have to be strong. Right where I can't go on, God can work. That makes me more honest with myself."
+},
+"step": {
+"de": "Sag heute einer Person ehrlich, dass dir gerade etwas zu viel ist.",
+"en": "Tell someone honestly today that something is too much for you right now."
+}
+},
+{
+"de": [
+"Darum sollt ihr euch nicht sorgen um den morgigen Tag; denn der morgige Tag wird f\u00FCr das Seine sorgen. Jedem Tag gen\u00FCgt seine eigene Plage.",
+"Matth\u00E4us 6,34"
+],
+"en": [
+"Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof.",
+"Matthew 6:34"
+],
+"help": {
+"de": "Oft \u00FCberfordert mich nicht der heutige Tag, sondern alles, was noch kommt. Ich versuche, nur den heutigen Tag zu tragen.",
+"en": "Often it's not today that overwhelms me but everything still to come. I try to carry only today."
+},
+"step": {
+"de": "Schreib nur die drei wichtigsten Dinge f\u00FCr heute auf. Alles andere geh\u00F6rt zu morgen.",
+"en": "Write down only the three most important things for today. Everything else belongs to tomorrow."
+}
+},
+{
+"de": [
+"Sorgt euch um nichts; sondern in allem lasst durch Gebet und Flehen mit Danksagung eure Anliegen vor Gott kundwerden. Und der Friede Gottes, der allen Verstand \u00FCbersteigt, wird eure Herzen und eure Gedanken bewahren in Christus Jesus!",
+"Philipper 4,6\u20137"
+],
+"en": [
+"Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+"Philippians 4:6\u20137"
+],
+"help": {
+"de": "Wenn meine Gedanken rasen, hilft mir das Beten mit Danken. Ich bitte um Hilfe und nenne gleichzeitig etwas, das gut ist. Dann wird es in mir ruhiger.",
+"en": "When my thoughts are racing, praying with thanks helps me. I ask for help and name something good at the same time. Then it gets quieter inside me."
+},
+"step": {
+"de": "Schreib eine Bitte und eine Sache, f\u00FCr die du dankbar bist, nebeneinander auf.",
+"en": "Write down one request and one thing you're grateful for, side by side."
+}
+},
+{
+"de": [
+"Gott ist unsere Zuflucht und St\u00E4rke, ein Helfer, bew\u00E4hrt in N\u00F6ten.",
+"Psalm 46,2"
+],
+"en": [
+"God is our refuge and strength, a very present help in trouble.",
+"Psalm 46:1"
+],
+"help": {
+"de": "Bew\u00E4hrt hei\u00DFt f\u00FCr mich: Gott hat mir schon oft geholfen. Wenn ich zur\u00FCckschaue, sehe ich, dass ich auch fr\u00FChere schwere Zeiten geschafft habe.",
+"en": "Proven means to me: God has helped me many times before. When I look back, I see that I got through earlier hard times too."
+},
+"step": {
+"de": "Denk an eine schwere Zeit, die du schon hinter dir hast, und schreib auf, was dir damals geholfen hat.",
+"en": "Think of a hard time you've already got through, and write down what helped you then."
+}
+},
+{
+"de": [
+"Er gibt dem M\u00FCden Kraft und St\u00E4rke genug dem Unverm\u00F6genden.",
+"Jesaja 40,29"
+],
+"en": [
+"He giveth power to the faint; and to them that have no might he increaseth strength.",
+"Isaiah 40:29"
+],
+"help": {
+"de": "M\u00FCde sein ist kein Versagen. Gott gibt gerade denen Kraft, die keine mehr haben. Manchmal hei\u00DFt das auch einfach: schlafen gehen.",
+"en": "Being tired isn't failing. God gives strength to exactly those who have none left. Sometimes that simply means going to sleep."
+},
+"step": {
+"de": "Geh heute eine halbe Stunde fr\u00FCher ins Bett und leg das Handy weg.",
+"en": "Go to bed half an hour earlier today and put your phone away."
+}
+},
+{
+"de": [
+"Vom Ende der Erde rufe ich zu dir, da mein Herz verschmachtet: F\u00FChre du mich auf den Felsen, der mir zu hoch ist!",
+"Psalm 61,3"
+],
+"en": [
+"From the end of the earth will I cry unto thee, when my heart is overwhelmed: lead me to the rock that is higher than I.",
+"Psalm 61:2"
+],
+"help": {
+"de": "Ich muss nicht selbst auf den Felsen klettern. Ich darf darum bitten, dorthin gef\u00FChrt zu werden, wenn mir alles \u00FCber den Kopf w\u00E4chst.",
+"en": "I don't have to climb the rock myself. I'm allowed to ask to be led there when everything is over my head."
+},
+"step": {
+"de": "Bitte heute eine Person um Hilfe bei einer Sache, die du sonst allein machen w\u00FCrdest.",
+"en": "Ask someone today to help you with something you'd normally do alone."
+}
+}
+]
+},
+{
+"id": "zweifelnd",
+"name": {
+"de": "Zweifelnd",
+"en": "Doubting"
+},
+"verses": [
+{
+"de": [
+"Ich glaube, Herr; hilf mir, [loszukommen] von meinem Unglauben!",
+"Markus 9,24"
+],
+"en": [
+"Lord, I believe; help thou mine unbelief.",
+"Mark 9:24"
+],
+"help": {
+"de": "Dieser Vater glaubt und zweifelt gleichzeitig, und Jesus hilft ihm trotzdem. Ich muss nicht perfekt glauben, um ehrlich zu glauben.",
+"en": "This father believes and doubts at the same time, and Jesus still helps him. I don't have to believe perfectly to believe honestly."
+},
+"step": {
+"de": "Bete heute genau diesen einen Satz: Ich glaube, hilf meinem Unglauben.",
+"en": "Pray this one sentence today: I believe, help my unbelief."
+}
+},
+{
+"de": [
+"Gl\u00FCckselig sind, die nicht sehen und doch glauben!",
+"Johannes 20,29"
+],
+"en": [
+"Blessed are they that have not seen, and yet have believed.",
+"John 20:29"
+],
+"help": {
+"de": "Thomas wollte Beweise, und Jesus hat ihn nicht weggeschickt. Fragen geh\u00F6ren dazu. Trotzdem darf ich vertrauen, auch ohne alles zu sehen.",
+"en": "Thomas wanted proof, and Jesus didn't send him away. Questions are part of it. Still, I can trust without seeing everything."
+},
+"step": {
+"de": "Erinnere dich an einen Moment, in dem du Gottes N\u00E4he gesp\u00FCrt hast, und schreib ihn auf.",
+"en": "Remember a moment when you felt God close, and write it down."
+}
+},
+{
+"de": [
+"Es ist aber der Glaube eine feste Zuversicht auf das, was man hofft, eine \u00DCberzeugung von Tatsachen, die man nicht sieht.",
+"Hebr\u00E4er 11,1"
+],
+"en": [
+"Now faith is the substance of things hoped for, the evidence of things not seen.",
+"Hebrews 11:1"
+],
+"help": {
+"de": "Glaube ist f\u00FCr mich kein Wissen auf Knopfdruck, sondern Vertrauen. Wie bei einem Freund, dem ich glaube, auch wenn ich nicht alles nachpr\u00FCfen kann.",
+"en": "To me faith isn't knowledge at the push of a button but trust. Like a friend I believe, even if I can't check everything."
+},
+"step": {
+"de": "Schreib eine Sache auf, auf die du hoffst, auch wenn du sie noch nicht siehst.",
+"en": "Write down one thing you hope for, even if you can't see it yet."
+}
+},
+{
+"de": [
+"Wenn es aber jemand unter euch an Weisheit mangelt, so erbitte er sie von Gott, der allen gern und ohne Vorwurf gibt, so wird sie ihm gegeben werden.",
+"Jakobus 1,5"
+],
+"en": [
+"If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.",
+"James 1:5"
+],
+"help": {
+"de": "Ohne Vorwurf finde ich wichtig. Ich darf Gott alles fragen, ohne Angst, dass meine Fragen dumm sind.",
+"en": "Without reproach matters to me. I can ask God anything without fearing my questions are stupid."
+},
+"step": {
+"de": "Formulier deine gr\u00F6\u00DFte Frage in einem Satz. Du musst sie heute nicht beantworten.",
+"en": "Put your biggest question into one sentence. You don't have to answer it today."
+}
+},
+{
+"de": [
+"Vertraue auf den HERRN von ganzem Herzen und verlass dich nicht auf deinen Verstand; erkenne Ihn auf allen deinen Wegen, so wird Er deine Pfade ebnen.",
+"Spr\u00FCche 3,5\u20136"
+],
+"en": [
+"Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+"Proverbs 3:5\u20136"
+],
+"help": {
+"de": "Mein Verstand ist ein Geschenk, aber er sieht nicht alles. Wenn ich nicht weiterwei\u00DF, darf ich vertrauen, statt alles selbst durchschauen zu m\u00FCssen.",
+"en": "My mind is a gift, but it doesn't see everything. When I'm stuck, I can trust instead of having to figure it all out myself."
+},
+"step": {
+"de": "Gib heute eine Entscheidung, \u00FCber die du gr\u00FCbelst, bewusst im Gebet ab.",
+"en": "Consciously hand over a decision you keep brooding over in prayer today."
+}
+},
+{
+"de": [
+"Jesus aber streckte sogleich die Hand aus, ergriff ihn und sprach zu ihm: Du Kleingl\u00E4ubiger, warum hast du gezweifelt?",
+"Matth\u00E4us 14,31"
+],
+"en": [
+"And immediately Jesus stretched forth his hand, and caught him, and said unto him, O thou of little faith, wherefore didst thou doubt?",
+"Matthew 14:31"
+],
+"help": {
+"de": "Petrus sinkt, weil er zweifelt, aber Jesus greift sofort zu. Zuerst kommt die Hand, dann die Frage. So erlebe ich Gott auch.",
+"en": "Peter sinks because he doubts, but Jesus grabs him right away. First comes the hand, then the question. That's how I experience God too."
+},
+"step": {
+"de": "Wenn du heute zweifelst, sag es Gott ehrlich, statt es zu verstecken.",
+"en": "If you're doubting today, tell God honestly instead of hiding it."
+}
+},
+{
+"de": [
+"Ja, ihr werdet mich suchen und finden, wenn ihr von ganzem Herzen nach mir verlangen werdet.",
+"Jeremia 29,13"
+],
+"en": [
+"And ye shall seek me, and find me, when ye shall search for me with all your heart.",
+"Jeremiah 29:13"
+],
+"help": {
+"de": "Zweifel kann auch ein Zeichen sein, dass ich wirklich suche. Gott verspricht, sich finden zu lassen, wenn ich ehrlich frage.",
+"en": "Doubt can also be a sign that I'm really searching. God promises to let himself be found when I ask honestly."
+},
+"step": {
+"de": "Lies heute ein Kapitel aus einem Evangelium, zum Beispiel Markus 1.",
+"en": "Read one chapter from a Gospel today, for example Mark 1."
+}
+},
+{
+"de": [
+"Bittet, so wird euch gegeben; sucht, so werdet ihr finden; klopft an, so wird euch aufgetan!",
+"Matth\u00E4us 7,7"
+],
+"en": [
+"Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.",
+"Matthew 7:7"
+],
+"help": {
+"de": "Bitten, suchen, anklopfen: Das sind alles T\u00E4tigkeiten. Glauben hei\u00DFt f\u00FCr mich nicht, still zu warten, sondern dranzubleiben.",
+"en": "Ask, seek, knock: these are all actions. For me, faith doesn't mean waiting quietly but keeping at it."
+},
+"step": {
+"de": "Stell einer Person, deren Glauben du sch\u00E4tzt, eine ehrliche Frage.",
+"en": "Ask someone whose faith you respect one honest question."
+}
+},
+{
+"de": [
+"Denn meine Gedanken sind nicht eure Gedanken, und eure Wege sind nicht meine Wege, spricht der HERR; sondern so hoch der Himmel \u00FCber der Erde ist, so viel h\u00F6her sind meine Wege als eure Wege und meine Gedanken als eure Gedanken.",
+"Jesaja 55,8\u20139"
+],
+"en": [
+"For my thoughts are not your thoughts, neither are your ways my ways, saith the LORD. For as the heavens are higher than the earth, so are my ways higher than your ways, and my thoughts than your thoughts.",
+"Isaiah 55:8\u20139"
+],
+"help": {
+"de": "Manche Dinge verstehe ich nicht, und das ist okay. Wenn Gott gr\u00F6\u00DFer ist als mein Verstand, muss ich nicht auf alles eine Antwort haben.",
+"en": "Some things I don't understand, and that's okay. If God is bigger than my mind, I don't need an answer to everything."
+},
+"step": {
+"de": "Schau heute Abend kurz in den Himmel und lass dich daran erinnern, wie gro\u00DF Gott ist.",
+"en": "Look up at the sky tonight and let it remind you how big God is."
+}
+},
+{
+"de": [
+"Und Nathanael sprach zu ihm: Kann aus Nazareth etwas Gutes kommen? Philippus spricht zu ihm: Komm und sieh!",
+"Johannes 1,46"
+],
+"en": [
+"And Nathanael said unto him, Can there any good thing come out of Nazareth? Philip saith unto him, Come and see.",
+"John 1:46"
+],
+"help": {
+"de": "Philippus streitet nicht mit Nathanael. Er l\u00E4dt ihn einfach ein. So m\u00F6chte ich auch mit Zweifeln umgehen: hingehen und selbst schauen.",
+"en": "Philip doesn't argue with Nathanael. He simply invites him. That's how I want to deal with doubt too: go and see for myself."
+},
+"step": {
+"de": "Schau dir unter Neugierig? an, wo du uns kennenlernen kannst, und such dir einen Termin aus.",
+"en": "Have a look under Curious? at where you can meet us, and pick a date."
+}
+}
+]
+},
+{
+"id": "aengstlich",
+"name": {
+"de": "\u00C4ngstlich",
+"en": "Anxious"
+},
+"verses": [
+{
+"de": [
+"F\u00FCrchte dich nicht, denn ich bin mit dir; sei nicht \u00E4ngstlich, denn ich bin dein Gott; ich st\u00E4rke dich, ich helfe dir auch, ja, ich erhalte dich durch die rechte Hand meiner Gerechtigkeit!",
+"Jesaja 41,10"
+],
+"en": [
+"Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+"Isaiah 41:10"
+],
+"help": {
+"de": "Angst verschwindet bei mir nicht einfach. Aber ich merke, dass ich trotzdem weitergehen kann, weil ich nicht allein gehe.",
+"en": "My fear doesn't just disappear. But I notice that I can keep going anyway, because I'm not walking alone."
+},
+"step": {
+"de": "Atme viermal tief ein und aus und mach dann den kleinsten Schritt, der dir einf\u00E4llt.",
+"en": "Take four deep breaths, then take the smallest step you can think of."
+}
+},
+{
+"de": [
+"Denn ich, der HERR, dein Gott, ergreife deine rechte Hand und sage dir: F\u00FCrchte dich nicht; ich helfe dir!",
+"Jesaja 41,13"
+],
+"en": [
+"For I the LORD thy God will hold thy right hand, saying unto thee, Fear not; I will help thee.",
+"Isaiah 41:13"
+],
+"help": {
+"de": "Ich stelle mir vor, wie ein Kind an der Hand gehalten wird. Ich muss den Weg nicht kennen, nur die Hand nicht loslassen.",
+"en": "I picture a child being held by the hand. I don't need to know the way, just not let go of the hand."
+},
+"step": {
+"de": "Halte heute deine H\u00E4nde kurz offen, sag Gott, wovor du Angst hast, und bitte ihn, dich zu halten.",
+"en": "Hold your hands open for a moment today, tell God what you're afraid of, and ask him to hold you."
+}
+},
+{
+"de": [
+"Denn Gott hat uns nicht einen Geist der Furchtsamkeit gegeben, sondern der Kraft und der Liebe und der Zucht.",
+"2. Timotheus 1,7"
+],
+"en": [
+"For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.",
+"2 Timothy 1:7"
+],
+"help": {
+"de": "Angst ist da, aber sie ist nicht das Einzige in mir. Gott hat mir auch Kraft und Liebe gegeben, und ich darf mich daran erinnern.",
+"en": "Fear is there, but it isn't the only thing in me. God has also given me power and love, and I can remind myself of that."
+},
+"step": {
+"de": "Schreib drei St\u00E4rken auf, die du an dir kennst.",
+"en": "Write down three strengths you know you have."
+}
+},
+{
+"de": [
+"Wenn mir angst ist, vertraue ich auf dich!",
+"Psalm 56,4"
+],
+"en": [
+"What time I am afraid, I will trust in thee.",
+"Psalm 56:3"
+],
+"help": {
+"de": "David schreibt nicht: Ich habe nie Angst. Er schreibt: Wenn ich Angst habe. Angst und Vertrauen d\u00FCrfen gleichzeitig da sein.",
+"en": "David doesn't write: I'm never afraid. He writes: when I am afraid. Fear and trust can be there at the same time."
+},
+"step": {
+"de": "Mach diesen Vers zu deinem Satz f\u00FCr heute und sag ihn, sobald die Angst kommt.",
+"en": "Make this verse your sentence for today and say it whenever fear comes."
+}
+},
+{
+"de": [
+"Frieden hinterlasse ich euch; meinen Frieden gebe ich euch. Nicht wie die Welt gibt, gebe ich euch; euer Herz erschrecke nicht und verzage nicht!",
+"Johannes 14,27"
+],
+"en": [
+"Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.",
+"John 14:27"
+],
+"help": {
+"de": "Der Friede von Jesus h\u00E4ngt nicht davon ab, dass alles gut l\u00E4uft. Er kann auch mitten im Chaos da sein.",
+"en": "The peace of Jesus doesn't depend on everything going well. It can be there even in the middle of chaos."
+},
+"step": {
+"de": "Leg f\u00FCr eine Stunde alle Nachrichten und Social Media weg.",
+"en": "Put away all news and social media for one hour."
+}
+},
+{
+"de": [
+"Der HERR ist mein Licht und mein Heil, vor wem sollte ich mich f\u00FCrchten? Der HERR ist meines Lebens Kraft, vor wem sollte mir grauen?",
+"Psalm 27,1"
+],
+"en": [
+"The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?",
+"Psalm 27:1"
+],
+"help": {
+"de": "Dieser Vers ist f\u00FCr mich der Kern von BeLight. Im Dunkeln wird alles gr\u00F6\u00DFer und bedrohlicher. Wenn Licht da ist, sehe ich wieder, was wirklich ist.",
+"en": "This verse is the heart of BeLight for me. In the dark, everything looks bigger and scarier. When there's light, I see again what's real."
+},
+"step": {
+"de": "Z\u00FCnde heute Abend eine Kerze an und sprich den Vers laut aus.",
+"en": "Light a candle tonight and say the verse out loud."
+}
+},
+{
+"de": [
+"F\u00FCrchte dich nicht, denn ich habe dich erl\u00F6st! Ich habe dich bei deinem Namen gerufen; du bist mein.",
+"Jesaja 43,1"
+],
+"en": [
+"Fear not: for I have redeemed thee, I have called thee by thy name; thou art mine.",
+"Isaiah 43:1"
+],
+"help": {
+"de": "Gott kennt meinen Namen. Ich bin f\u00FCr ihn keine Nummer. Das gibt mir Halt, wenn ich Angst habe, nicht gut genug zu sein.",
+"en": "God knows my name. I'm not a number to him. That steadies me when I'm afraid I'm not good enough."
+},
+"step": {
+"de": "Schreib deinen Namen in den Vers und lies ihn dir selbst vor.",
+"en": "Write your own name into the verse and read it to yourself."
+}
+},
+{
+"de": [
+"Habe ich dir nicht geboten, dass du stark und mutig sein sollst? Sei unerschrocken und sei nicht verzagt; denn der HERR, dein Gott, ist mit dir \u00FCberall, wo du hingehst!",
+"Josua 1,9"
+],
+"en": [
+"Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+"Joshua 1:9"
+],
+"help": {
+"de": "Mut hei\u00DFt nicht, keine Angst zu haben. Mut hei\u00DFt, trotzdem zu gehen. Josua durfte mutig sein, weil Gott mitging, und das gilt auch f\u00FCr mich.",
+"en": "Courage doesn't mean having no fear. Courage means going anyway. Joshua could be brave because God went with him, and that's true for me too."
+},
+"step": {
+"de": "Mach heute eine Sache, vor der du ein bisschen Angst hast, zum Beispiel einen Anruf oder eine Frage im Unterricht.",
+"en": "Do one thing today that scares you a little, like a phone call or a question in class."
+}
+},
+{
+"de": [
+"Als ich den HERRN suchte, antwortete er mir und rettete mich aus allen meinen \u00C4ngsten.",
+"Psalm 34,5"
+],
+"en": [
+"I sought the LORD, and he heard me, and delivered me from all my fears.",
+"Psalm 34:4"
+],
+"help": {
+"de": "Zuerst kommt das Suchen. Wenn ich Angst habe, ist mein erster Schritt, mich an Gott zu wenden, bevor ich alles allein l\u00F6se.",
+"en": "First comes seeking. When I'm afraid, my first step is to turn to God before I try to solve everything myself."
+},
+"step": {
+"de": "Bevor du heute gr\u00FCbelst, sprich zuerst ein kurzes Gebet \u00FCber deine Angst.",
+"en": "Before you start brooding today, say a short prayer about your fear first."
+}
+},
+{
+"de": [
+"Furcht ist nicht in der Liebe, sondern die vollkommene Liebe treibt die Furcht aus.",
+"1. Johannes 4,18"
+],
+"en": [
+"There is no fear in love; but perfect love casteth out fear.",
+"1 John 4:18"
+],
+"help": {
+"de": "Je mehr ich verstehe, wie sehr Gott mich liebt, desto weniger Platz hat die Angst. Liebe ist f\u00FCr mich das st\u00E4rkste Mittel gegen Angst.",
+"en": "The more I understand how much God loves me, the less room fear has. Love is the strongest remedy against fear for me."
+},
+"step": {
+"de": "Tu heute jemandem bewusst etwas Gutes, statt dich mit deiner Angst zu besch\u00E4ftigen.",
+"en": "Do something kind for someone today on purpose, instead of dwelling on your fear."
+}
+}
+]
+},
+{
+"id": "dankbar",
+"name": {
+"de": "Dankbar",
+"en": "Grateful"
+},
+"verses": [
+{
+"de": [
+"Dankt dem HERRN, denn er ist g\u00FCtig, ja, seine Gnade w\u00E4hrt ewiglich!",
+"Psalm 118,1"
+],
+"en": [
+"O give thanks unto the LORD; for he is good: because his mercy endureth for ever.",
+"Psalm 118:1"
+],
+"help": {
+"de": "Gute Tage halte ich bewusst fest. Sie erinnern mich an schweren Tagen daran, dass es wieder hell wird.",
+"en": "I hold on to good days on purpose. On hard days they remind me that the light comes back."
+},
+"step": {
+"de": "Schreib drei Dinge auf, f\u00FCr die du heute dankbar bist, und erz\u00E4hl einer Person davon.",
+"en": "Write down three things you're grateful for today, and tell one person about them."
+}
+},
+{
+"de": [
+"Seid in allem dankbar; denn das ist der Wille Gottes in Christus Jesus f\u00FCr euch.",
+"1. Thessalonicher 5,18"
+],
+"en": [
+"In every thing give thanks: for this is the will of God in Christ Jesus concerning you.",
+"1 Thessalonians 5:18"
+],
+"help": {
+"de": "In allem hei\u00DFt nicht f\u00FCr alles. Auch an einem schwierigen Tag finde ich meistens etwas Kleines, wof\u00FCr ich danken kann.",
+"en": "In everything doesn't mean for everything. Even on a difficult day I can usually find something small to be thankful for."
+},
+"step": {
+"de": "Such heute Abend etwas Gutes in einem Moment, der eigentlich schwierig war.",
+"en": "Tonight, look for something good in a moment that was actually difficult."
+}
+},
+{
+"de": [
+"Lobe den HERRN, meine Seele, und vergiss nicht, was er dir Gutes getan hat!",
+"Psalm 103,2"
+],
+"en": [
+"Bless the LORD, O my soul, and forget not all his benefits.",
+"Psalm 103:2"
+],
+"help": {
+"de": "Ich vergesse Gutes schnell und erinnere mich lange an Schlechtes. Deshalb erinnere ich mich bewusst daran, was Gott mir schon geschenkt hat.",
+"en": "I forget good things quickly and remember bad things for a long time. That's why I deliberately remember what God has already given me."
+},
+"step": {
+"de": "Schau dir alte Fotos an und such einen Moment, f\u00FCr den du heute noch dankbar bist.",
+"en": "Look through old photos and find a moment you're still grateful for today."
+}
+},
+{
+"de": [
+"Dies ist der Tag, den der HERR gemacht hat; wir wollen uns freuen und fr\u00F6hlich sein in ihm!",
+"Psalm 118,24"
+],
+"en": [
+"This is the day which the LORD hath made; we will rejoice and be glad in it.",
+"Psalm 118:24"
+],
+"help": {
+"de": "Nicht irgendein perfekter Tag in der Zukunft, sondern dieser Tag ist geschenkt. Das hilft mir, das Heute zu genie\u00DFen.",
+"en": "Not some perfect day in the future, but this day is a gift. That helps me enjoy today."
+},
+"step": {
+"de": "Mach heute bewusst etwas, das dir Freude macht, und genie\u00DF es ohne Handy.",
+"en": "Do something today that brings you joy, on purpose, and enjoy it without your phone."
+}
+},
+{
+"de": [
+"Geht ein zu seinen Toren mit Danken, zu seinen Vorh\u00F6fen mit Loben; dankt ihm, preist seinen Namen!",
+"Psalm 100,4"
+],
+"en": [
+"Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name.",
+"Psalm 100:4"
+],
+"help": {
+"de": "Wenn ich zum Beten nicht wei\u00DF, wie ich anfangen soll, fange ich mit Danke an. Das \u00F6ffnet mein Herz.",
+"en": "When I don't know how to start praying, I start with thank you. It opens my heart."
+},
+"step": {
+"de": "Beginne dein n\u00E4chstes Gebet mit drei Mal Danke, bevor du um etwas bittest.",
+"en": "Start your next prayer with three thank-yous before you ask for anything."
+}
+},
+{
+"de": [
+"Jede gute Gabe und jedes vollkommene Geschenk kommt von oben herab, von dem Vater der Lichter, bei dem keine Ver\u00E4nderung ist, noch ein Schatten infolge von Wechsel.",
+"Jakobus 1,17"
+],
+"en": [
+"Every good gift and every perfect gift is from above, and cometh down from the Father of lights, with whom is no variableness, neither shadow of turning.",
+"James 1:17"
+],
+"help": {
+"de": "Vater der Lichter: Das gef\u00E4llt mir sehr. Alles Gute in meinem Leben, auch meine Freunde und mein Malen, sehe ich als Geschenk von ihm.",
+"en": "Father of lights: I really love that. Everything good in my life, my friends and my painting too, I see as a gift from him."
+},
+"step": {
+"de": "Nimm dir zehn Minuten f\u00FCr etwas, das du gut kannst, und sieh es als Geschenk.",
+"en": "Spend ten minutes on something you're good at, and see it as a gift."
+}
+},
+{
+"de": [
+"Ich will den HERRN loben von ganzem Herzen, ich will alle deine Wunder erz\u00E4hlen.",
+"Psalm 9,2"
+],
+"en": [
+"I will praise thee, O LORD, with my whole heart; I will shew forth all thy marvellous works.",
+"Psalm 9:1"
+],
+"help": {
+"de": "Dankbarkeit wird gr\u00F6\u00DFer, wenn ich sie teile. Wenn ich anderen erz\u00E4hle, was Gott getan hat, macht es auch ihnen Mut.",
+"en": "Gratitude grows when I share it. When I tell others what God has done, it encourages them too."
+},
+"step": {
+"de": "Erz\u00E4hl heute einer Person von etwas Gutem, das du erlebt hast.",
+"en": "Tell someone about something good you've experienced today."
+}
+},
+{
+"de": [
+"Freut euch im Herrn allezeit; abermals sage ich: Freut euch!",
+"Philipper 4,4"
+],
+"en": [
+"Rejoice in the Lord alway: and again I say, Rejoice.",
+"Philippians 4:4"
+],
+"help": {
+"de": "Paulus hat das im Gef\u00E4ngnis geschrieben. Freude h\u00E4ngt also nicht nur davon ab, wie es mir gerade geht, sondern von dem, an dem ich mich festhalte.",
+"en": "Paul wrote this in prison. So joy doesn't only depend on how I'm doing, but on who I hold on to."
+},
+"step": {
+"de": "H\u00F6r dir heute ein Lied an, das dich fr\u00F6hlich macht, und sing laut mit.",
+"en": "Listen to a song that makes you happy today, and sing along loudly."
+}
+},
+{
+"de": [
+"Der HERR hat Gro\u00DFes an uns getan, wir sind fr\u00F6hlich geworden.",
+"Psalm 126,3"
+],
+"en": [
+"The LORD hath done great things for us; whereof we are glad.",
+"Psalm 126:3"
+],
+"help": {
+"de": "Ich darf bald mein Studium abschlie\u00DFen, obwohl ich mal dachte, ich schaffe es nie. Wenn ich daran denke, bin ich einfach dankbar.",
+"en": "I'm about to finish my studies, even though I once thought I'd never make it. When I think about that, I'm simply grateful."
+},
+"step": {
+"de": "Schreib eine Sache auf, die du geschafft hast, obwohl du nicht daran geglaubt hast.",
+"en": "Write down one thing you achieved even though you didn't believe you could."
+}
+},
+{
+"de": [
+"Und was immer ihr tut in Wort oder Werk, das tut alles im Namen des Herrn Jesus und dankt Gott, dem Vater, durch ihn.",
+"Kolosser 3,17"
+],
+"en": [
+"And whatsoever ye do in word or deed, do all in the name of the Lord Jesus, giving thanks to God and the Father by him.",
+"Colossians 3:17"
+],
+"help": {
+"de": "Dankbarkeit ist f\u00FCr mich nicht nur ein Gef\u00FChl, sondern eine Haltung im Alltag, beim Lernen, beim Helfen in der Kirche und mit meinen Freunden.",
+"en": "For me gratitude isn't just a feeling but an attitude in everyday life, while studying, helping at church and with my friends."
+},
+"step": {
+"de": "Sag heute drei Personen ehrlich Danke f\u00FCr etwas Konkretes.",
+"en": "Honestly thank three people today for something specific."
+}
+}
+]
+},
+{
+"id": "ziellos",
+"name": {
+"de": "Ziellos",
+"en": "Lost"
+},
+"verses": [
+{
+"de": [
+"Denn ich wei\u00DF, was f\u00FCr Gedanken ich \u00FCber euch habe, spricht der HERR, Gedanken des Friedens und nicht des Unheils, um euch eine Zukunft und eine Hoffnung zu geben.",
+"Jeremia 29,11"
+],
+"en": [
+"For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+"Jeremiah 29:11"
+],
+"help": {
+"de": "Ich wei\u00DF auch nicht immer, wohin mein Weg f\u00FChrt. Aber ich vertraue darauf, dass er einen Sinn hat, auch wenn ich ihn noch nicht sehe.",
+"en": "I don't always know where my path leads either. But I trust that it has a purpose, even if I can't see it yet."
+},
+"step": {
+"de": "Schreib auf, wie du dir dein Leben in f\u00FCnf Jahren w\u00FCnschst, ganz ohne Druck.",
+"en": "Write down how you'd like your life to look in five years, without any pressure."
+}
+},
+{
+"de": [
+"Das Herz des Menschen denkt sich seinen Weg aus, aber der HERR lenkt seine Schritte.",
+"Spr\u00FCche 16,9"
+],
+"en": [
+"A man's heart deviseth his way: but the LORD directeth his steps.",
+"Proverbs 16:9"
+],
+"help": {
+"de": "Ich habe zuerst etwas anderes studiert und bin nicht weitergekommen. Heute sehe ich, dass Gott meine Schritte trotzdem gelenkt hat.",
+"en": "I first studied something else and didn't get anywhere. Today I see that God still guided my steps."
+},
+"step": {
+"de": "Mach heute einen kleinen Plan, aber sei offen daf\u00FCr, dass es anders kommen darf.",
+"en": "Make a small plan today, but stay open to it turning out differently."
+}
+},
+{
+"de": [
+"Ich will dich unterweisen und dir den Weg zeigen, auf dem du wandeln sollst; ich will dir raten, mein Auge auf dich richten.",
+"Psalm 32,8"
+],
+"en": [
+"I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye.",
+"Psalm 32:8"
+],
+"help": {
+"de": "Gott verspricht, mir den Weg zu zeigen. Ich muss ihn nicht allein herausfinden. Oft zeigt er ihn mir durch Menschen, die mich gut kennen.",
+"en": "God promises to show me the way. I don't have to work it out alone. Often he shows it to me through people who know me well."
+},
+"step": {
+"de": "Frag eine Person, die dich gut kennt, was sie an dir besonders findet.",
+"en": "Ask someone who knows you well what they find special about you."
+}
+},
+{
+"de": [
+"Denn wir sind seine Sch\u00F6pfung, erschaffen in Christus Jesus zu guten Werken, die Gott zuvor bereitet hat, damit wir in ihnen wandeln sollen.",
+"Epheser 2,10"
+],
+"en": [
+"For we are his workmanship, created in Christ Jesus unto good works, which God hath before ordained that we should walk in them.",
+"Ephesians 2:10"
+],
+"help": {
+"de": "Ich bin kein Zufall. Ich habe viele Leidenschaften, und ich glaube, Gott hat mir jede davon mit Absicht gegeben.",
+"en": "I'm not an accident. I have many passions, and I believe God gave me each one of them on purpose."
+},
+"step": {
+"de": "\u00DCberleg dir eine Sache, die dir Freude macht, und gib ihr heute zehn Minuten.",
+"en": "Think of one thing that brings you joy, and give it ten minutes today."
+}
+},
+{
+"de": [
+"Dein Wort ist meines Fu\u00DFes Leuchte und ein Licht auf meinem Weg.",
+"Psalm 119,105"
+],
+"en": [
+"Thy word is a lamp unto my feet, and a light unto my path.",
+"Psalm 119:105"
+],
+"help": {
+"de": "Eine Leuchte f\u00FCr die F\u00FC\u00DFe zeigt nicht den ganzen Weg, nur den n\u00E4chsten Schritt. Mehr brauche ich oft gar nicht.",
+"en": "A lamp for my feet doesn't show the whole way, just the next step. Often that's all I need."
+},
+"step": {
+"de": "Lies heute einen Psalm und schreib einen Satz heraus, der dich anspricht.",
+"en": "Read one psalm today and write down a sentence that speaks to you."
+}
+},
+{
+"de": [
+"Ich bin das Licht der Welt. Wer mir nachfolgt, wird nicht in der Finsternis wandeln, sondern er wird das Licht des Lebens haben.",
+"Johannes 8,12"
+],
+"en": [
+"I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.",
+"John 8:12"
+],
+"help": {
+"de": "Wenn ich nicht wei\u00DF, wohin, frage ich mich: Was w\u00FCrde Jesus an meiner Stelle tun? Das bringt oft schon Licht in meine Gedanken.",
+"en": "When I don't know where to go, I ask myself: what would Jesus do in my place? That often brings light into my thoughts already."
+},
+"step": {
+"de": "Stell dir bei einer Entscheidung heute die Frage: Was w\u00FCrde Jesus tun?",
+"en": "Ask yourself about one decision today: what would Jesus do?"
+}
+},
+{
+"de": [
+"Und deine Ohren werden das Wort h\u00F6ren, das hinter dir her so spricht: \u00BBDies ist der Weg, den geht!\u00AB, wenn ihr zur Rechten oder zur Linken abbiegen wollt.",
+"Jesaja 30,21"
+],
+"en": [
+"And thine ears shall hear a word behind thee, saying, This is the way, walk ye in it, when ye turn to the right hand, and when ye turn to the left.",
+"Isaiah 30:21"
+],
+"help": {
+"de": "Damit ich diese Stimme h\u00F6re, muss ich manchmal leiser werden. Wenn alles laut ist, verliere ich die Richtung.",
+"en": "To hear that voice, I sometimes need to get quieter. When everything is loud, I lose my direction."
+},
+"step": {
+"de": "Nimm dir heute zehn Minuten Stille, ohne Musik und ohne Handy.",
+"en": "Take ten minutes of silence today, without music and without your phone."
+}
+},
+{
+"de": [
+"Jesus spricht zu ihm: Ich bin der Weg und die Wahrheit und das Leben; niemand kommt zum Vater als nur durch mich!",
+"Johannes 14,6"
+],
+"en": [
+"Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.",
+"John 14:6"
+],
+"help": {
+"de": "Jesus sagt nicht, er zeigt einen Weg, sondern er ist der Weg. Wenn ich mich verloren f\u00FChle, halte ich mich an ihn statt an einen perfekten Plan.",
+"en": "Jesus doesn't say he shows a way, he says he is the way. When I feel lost, I hold on to him instead of a perfect plan."
+},
+"step": {
+"de": "Lies heute eine Geschichte \u00FCber Jesus und achte darauf, wie er mit Menschen umgeht.",
+"en": "Read one story about Jesus today and notice how he treats people."
+}
+},
+{
+"de": [
+"Ihr seid das Licht der Welt. Es kann eine Stadt, die auf einem Berg liegt, nicht verborgen bleiben.",
+"Matth\u00E4us 5,14"
+],
+"en": [
+"Ye are the light of the world. A city that is set on an hill cannot be hid.",
+"Matthew 5:14"
+],
+"help": {
+"de": "Von diesem Vers kommt der Name BeLight. Auch wenn ich mein Ziel noch nicht kenne, kann ich heute schon f\u00FCr jemanden ein Licht sein.",
+"en": "This verse is where the name BeLight comes from. Even if I don't know my goal yet, I can be a light for someone today."
+},
+"step": {
+"de": "Mach heute einer Person den Tag ein bisschen heller, mit einem Kompliment oder einer kleinen Hilfe.",
+"en": "Make someone's day a little brighter today, with a compliment or a small favour."
+}
+},
+{
+"de": [
+"Weil ich davon \u00FCberzeugt bin, dass der, welcher in euch ein gutes Werk angefangen hat, es auch vollenden wird bis auf den Tag Jesu Christi.",
+"Philipper 1,6"
+],
+"en": [
+"Being confident of this very thing, that he which hath begun a good work in you will perform it until the day of Jesus Christ.",
+"Philippians 1:6"
+],
+"help": {
+"de": "Ich bin noch nicht fertig, und das ist gut so. Gott arbeitet weiter an mir, auch wenn ich gerade nicht wei\u00DF, wohin es geht.",
+"en": "I'm not finished yet, and that's fine. God keeps working on me, even when I don't know where it's going right now."
+},
+"step": {
+"de": "Schreib auf, worin du dich im letzten Jahr ver\u00E4ndert hast.",
+"en": "Write down how you've changed over the past year."
+}
+}
+]
+},
+{
+"id": "hoffnungslos",
+"name": {
+"de": "Hoffnungslos",
+"en": "Hopeless"
+},
+"verses": [
+{
+"de": [
+"Der Gott der Hoffnung aber erf\u00FClle euch mit aller Freude und mit Frieden im Glauben, dass ihr \u00FCberstr\u00F6mt in der Hoffnung durch die Kraft des Heiligen Geistes!",
+"R\u00F6mer 15,13"
+],
+"en": [
+"Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost.",
+"Romans 15:13"
+],
+"help": {
+"de": "Es gab Zeiten, in denen ich selbst keine Hoffnung mehr gesehen habe. Hoffnung musste ich nicht selbst machen. Sie wurde mir geschenkt, Schritt f\u00FCr Schritt.",
+"en": "There were times when I couldn't see any hope myself. I didn't have to create hope on my own. It was given to me, step by step."
+},
+"step": {
+"de": "Sprich heute mit jemandem dar\u00FCber, wie es dir geht.",
+"en": "Talk to someone today about how you're doing."
+}
+},
+{
+"de": [
+"Gnadenbeweise des HERRN sind\u2019s, dass wir nicht g\u00E4nzlich aufgerieben wurden, denn seine Barmherzigkeit ist nicht zu Ende; sie ist jeden Morgen neu, und deine Treue ist gro\u00DF!",
+"Klagelieder 3,22\u201323"
+],
+"en": [
+"It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.",
+"Lamentations 3:22\u201323"
+],
+"help": {
+"de": "Jeden Morgen neu: Ein schlechter Tag ist nicht das Ende. Morgen darf ich wieder neu anfangen, egal wie heute war.",
+"en": "New every morning: a bad day isn't the end. Tomorrow I can start fresh, no matter how today went."
+},
+"step": {
+"de": "Leg dir heute Abend etwas bereit, auf das du dich morgen fr\u00FCh freust.",
+"en": "Tonight, get something ready that you can look forward to tomorrow morning."
+}
+},
+{
+"de": [
+"Was betr\u00FCbst du dich, meine Seele, und bist so unruhig in mir? Harre auf Gott, denn ich werde ihm noch danken f\u00FCr die Rettung, die von seinem Angesicht kommt!",
+"Psalm 42,6"
+],
+"en": [
+"Why art thou cast down, O my soul? and why art thou disquieted in me? hope thou in God: for I shall yet praise him for the help of his countenance.",
+"Psalm 42:5"
+],
+"help": {
+"de": "Der Psalmist redet mit sich selbst. Das mache ich auch: Ich sage meiner traurigen Seele, dass die Geschichte noch nicht zu Ende ist.",
+"en": "The psalmist talks to himself. I do that too: I tell my sad soul that the story isn't over yet."
+},
+"step": {
+"de": "Schreib dir selbst einen kurzen, lieben Brief, so wie du einer Freundin schreiben w\u00FCrdest.",
+"en": "Write yourself a short, kind letter, the way you'd write to a friend."
+}
+},
+{
+"de": [
+"Wir wissen aber, dass denen, die Gott lieben, alle Dinge zum Besten dienen, denen, die nach dem Vorsatz berufen sind.",
+"R\u00F6mer 8,28"
+],
+"en": [
+"And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+"Romans 8:28"
+],
+"help": {
+"de": "Nicht alles ist gut, was passiert. Aber ich habe erlebt, dass Gott selbst aus meinen schwersten Zeiten etwas Gutes wachsen lassen kann.",
+"en": "Not everything that happens is good. But I've experienced that God can let something good grow even out of my hardest times."
+},
+"step": {
+"de": "Denk an eine schwere Zeit zur\u00FCck und such eine Sache, die daraus Gutes geworden ist.",
+"en": "Think back to a hard time and find one thing that turned out good from it."
+}
+},
+{
+"de": [
+"Aber die auf den HERRN harren, kriegen neue Kraft, dass sie auffahren mit Fl\u00FCgeln wie Adler, dass sie laufen und nicht matt werden, dass sie wandeln und nicht m\u00FCde werden.",
+"Jesaja 40,31"
+],
+"en": [
+"But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.",
+"Isaiah 40:31"
+],
+"help": {
+"de": "Harren hei\u00DFt warten, und Warten ist schwer. Aber neue Kraft kommt, auch wenn ich sie heute noch nicht sp\u00FCre.",
+"en": "Waiting on the LORD is hard. But new strength comes, even if I can't feel it yet today."
+},
+"step": {
+"de": "Geh heute an die frische Luft, auch wenn es nur ein paar Minuten sind.",
+"en": "Get some fresh air today, even if it's only for a few minutes."
+}
+},
+{
+"de": [
+"Am Abend kehrt das Weinen ein und am Morgen der Jubel.",
+"Psalm 30,6"
+],
+"en": [
+"Weeping may endure for a night, but joy cometh in the morning.",
+"Psalm 30:5"
+],
+"help": {
+"de": "Weinen darf sein. Dieser Vers sagt nicht, dass ich stark sein muss, sondern dass die Nacht nicht f\u00FCr immer bleibt.",
+"en": "Crying is allowed. This verse doesn't say I have to be strong, but that the night won't last forever."
+},
+"step": {
+"de": "Erlaub dir heute, traurig zu sein, und tu danach etwas Kleines, das dir guttut.",
+"en": "Allow yourself to be sad today, and then do something small that's good for you."
+}
+},
+{
+"de": [
+"Und das Licht leuchtet in der Finsternis, und die Finsternis hat es nicht begriffen.",
+"Johannes 1,5"
+],
+"en": [
+"And the light shineth in darkness; and the darkness comprehended it not.",
+"John 1:5"
+],
+"help": {
+"de": "Dort, wo ich kein Licht mehr sah, gab es trotzdem eins. Ich hatte meine Augen verschlossen. Die Dunkelheit konnte das Licht nie ausl\u00F6schen.",
+"en": "Where I couldn't see any light, there was one anyway. I had closed my eyes. The darkness could never put the light out."
+},
+"step": {
+"de": "Such heute bewusst nach einem kleinen Lichtblick und schreib ihn auf.",
+"en": "Look for one small bright spot today on purpose, and write it down."
+}
+},
+{
+"de": [
+"Er heilt, die zerbrochenen Herzens sind, und verbindet ihre Wunden.",
+"Psalm 147,3"
+],
+"en": [
+"He healeth the broken in heart, and bindeth up their wounds.",
+"Psalm 147:3"
+],
+"help": {
+"de": "Heilung braucht Zeit. Gott verbindet Wunden vorsichtig, nicht mit Druck. Ich darf mir diese Zeit auch selbst geben.",
+"en": "Healing takes time. God binds wounds gently, not with pressure. I can give myself that time too."
+},
+"step": {
+"de": "Sei heute sanft mit dir und streich eine Erwartung, die du an dich hast.",
+"en": "Be gentle with yourself today and drop one expectation you have of yourself."
+}
+},
+{
+"de": [
+"Und Gott wird abwischen alle Tr\u00E4nen von ihren Augen, und der Tod wird nicht mehr sein, weder Leid noch Geschrei noch Schmerz wird mehr sein; denn das Erste ist vergangen.",
+"Offenbarung 21,4"
+],
+"en": [
+"And God shall wipe away all tears from their eyes; and there shall be no more death, neither sorrow, nor crying, neither shall there be any more pain: for the former things are passed away.",
+"Revelation 21:4"
+],
+"help": {
+"de": "Am Ende hat der Schmerz nicht das letzte Wort. Dieses Ziel gibt mir Hoffnung, auch wenn der Weg dorthin gerade schwer ist.",
+"en": "In the end, pain doesn't have the last word. That goal gives me hope, even when the way there is hard right now."
+},
+"step": {
+"de": "Erz\u00E4hl einer Person, der du vertraust, was dich gerade traurig macht.",
+"en": "Tell someone you trust what's making you sad right now."
+}
+},
+{
+"de": [
+"Denn wenn ich auch gefallen bin, so stehe ich doch wieder auf; wenn ich auch in der Finsternis sitze, so ist doch der HERR mein Licht.",
+"Micha 7,8"
+],
+"en": [
+"When I fall, I shall arise; when I sit in darkness, the LORD shall be a light unto me.",
+"Micah 7:8"
+],
+"help": {
+"de": "Hinfallen geh\u00F6rt zum Leben. Ich bin auch schon gefallen und wieder aufgestanden, nicht aus eigener Kraft, sondern weil Gott mein Licht war.",
+"en": "Falling is part of life. I've fallen and got back up before, not by my own strength, but because God was my light."
+},
+"step": {
+"de": "Mach heute einen ganz kleinen Schritt nach vorne, egal wie klein er ist.",
+"en": "Take one very small step forward today, no matter how small."
+}
+}
+],
+"note": {
+"de": "Wenn es dir sehr schlecht geht, hol dir Hilfe, zum Beispiel bei der Dargebotenen Hand unter 143.",
+"en": "If you're feeling really bad, get help, for example from Die Dargebotene Hand in Switzerland by calling 143."
+}
+}
 ];
 const moodsEl = document.getElementById("moods");
 const verseEl = document.getElementById("m-verse");
@@ -709,8 +2017,12 @@ function renderMood(animate){
   const [text, ref] = current.verses[verseIdx][lang];
   verseEl.textContent = lang === "de" ? "\u201E" + text + "\u201C" : "\u201C" + text + "\u201D";
   document.getElementById("m-ref").textContent = ref;
-  document.getElementById("m-text").textContent = current.text[lang];
-  document.getElementById("m-step").textContent = current.step[lang];
+  const v = current.verses[verseIdx];
+  document.getElementById("m-text").textContent = v.help[lang];
+  document.getElementById("m-step").textContent = v.step[lang];
+  const noteEl = document.getElementById("m-note");
+  noteEl.textContent = current.note ? current.note[lang] : "";
+  noteEl.hidden = !current.note;
   moodsEl.querySelectorAll("button").forEach(b => {
     b.setAttribute("aria-pressed", b.dataset.id === current.id);
     b.querySelector("span").textContent = MOODS.find(m => m.id === b.dataset.id).name[lang];
@@ -737,7 +2049,7 @@ const CARDS = [
   {de:["Sag heute einer Person, was dir Hoffnung gibt.", "Hoffnung w\u00E4chst, wenn man sie teilt."], en:["Tell someone today what gives you hope.", "Hope grows when you share it."]},
   {de:["Schreib eine Idee auf und mach den ersten Schritt in zehn Minuten.", "Angefangen ist besser als perfekt."], en:["Write down an idea and take the first step in ten minutes.", "Started is better than perfect."]},
   {de:["Mach jemandem ein ehrliches Kompliment.", "Ein Satz kann einen ganzen Tag ver\u00E4ndern."], en:["Give someone an honest compliment.", "One sentence can change a whole day."]},
-  {de:["Lass dein Handy eine Stunde liegen und sei ganz da.", "Stille macht Platz f\u00FCr das, was wichtig ist."], en:["Put your phone away for an hour and be fully present.", "Silence makes room for what matters."]},
+  {de:["Lass dein Handy eine Stunde liegen und mach in der Zeit etwas Produktives, zum Beispiel lesen, aufr\u00E4umen, lernen oder malen.", "Ohne Ablenkung bleibt Zeit f\u00FCr das, was dir wirklich wichtig ist."], en:["Put your phone away for an hour and use the time for something productive, like reading, tidying up, studying or drawing.", "Without distractions there's time for what really matters to you."]},
   {de:["Bete oder denk still f\u00FCr eine Person, die es gerade schwer hat.", "Niemand sollte allein durch schwere Zeiten gehen."], en:["Pray for, or quietly think of, someone who is going through a hard time.", "Nobody should go through hard times alone."]},
   {de:["Steh zu einer Meinung, auch wenn sie anders ist.", "Anders sein ist kein Fehler."], en:["Stand by an opinion, even if it's different.", "Being different is not a mistake."]},
   {de:["Frag jemanden: Wie geht's dir wirklich?", "Und dann h\u00F6r richtig zu."], en:["Ask someone: How are you really?", "And then truly listen."]},
@@ -745,7 +2057,27 @@ const CARDS = [
   {de:["Teile etwas, das du selbst gemacht hast.", "Deine Kreativit\u00E4t ist ein Geschenk f\u00FCr andere."], en:["Share something you made yourself.", "Your creativity is a gift to others."]},
   {de:["Bedank dich bei jemandem, der selten gesehen wird.", "Dankbarkeit macht Menschen sichtbar."], en:["Thank someone who is rarely noticed.", "Gratitude makes people visible."]},
   {de:["Lies heute einen Abschnitt aus den Evangelien.", "Fang klein an, zum Beispiel mit Markus 1."], en:["Read a passage from the Gospels today.", "Start small, for example with Mark 1."]},
-  {de:["Hilf jemandem, ohne dar\u00FCber zu reden.", "Gutes braucht kein Publikum."], en:["Help someone without talking about it.", "Doing good needs no audience."]}
+  {de:["Hilf jemandem, ohne dar\u00FCber zu reden.", "Gutes braucht kein Publikum."], en:["Help someone without talking about it.", "Doing good needs no audience."]},
+  {de:["Ruf heute jemanden an, statt nur zu schreiben.", "Eine Stimme sagt mehr als hundert Nachrichten."], en:["Call someone today instead of just texting.", "A voice says more than a hundred messages."]},
+  {de:["Setz dich zu jemandem, der allein sitzt.", "Manchmal ist Dasein schon genug."], en:["Sit down next to someone who is sitting alone.", "Sometimes just being there is enough."]},
+  {de:["Entschuldige dich bei jemandem, bei dem du es schon lange tun wolltest.", "Ein ehrliches Sorry macht frei."], en:["Apologise to someone you've been meaning to apologise to for a long time.", "An honest sorry sets you free."]},
+  {de:["Sag heute einmal bewusst Nein zu etwas, das dir nicht guttut.", "Grenzen setzen ist auch eine Form von Mut."], en:["Say no on purpose today to something that isn't good for you.", "Setting boundaries is a kind of courage too."]},
+  {de:["Lerne einen Bibelvers auswendig.", "Was du im Herzen tr\u00E4gst, hast du immer dabei."], en:["Learn one Bible verse by heart.", "What you carry in your heart is always with you."]},
+  {de:["Stell im Unterricht oder an der Uni eine Frage, die du dich sonst nicht trauen w\u00FCrdest.", "Wer fragt, lernt, und hilft oft auch anderen."], en:["Ask a question in class or at uni that you wouldn't normally dare to ask.", "Asking helps you learn, and often helps others too."]},
+  {de:["Schreib einer Person, die dich gepr\u00E4gt hat, warum sie dir wichtig ist.", "Menschen erfahren oft zu selten, was sie bewirken."], en:["Write to someone who shaped you and tell them why they matter to you.", "People too rarely hear what difference they make."]},
+  {de:["Bring heute etwas Liegengebliebenes zu Ende.", "Kleine Erfolge machen Mut f\u00FCr gro\u00DFe."], en:["Finish something today that you've left lying around.", "Small wins give you courage for big ones."]},
+  {de:["Geh heute zu Fu\u00DF oder mit dem Velo, wo du sonst f\u00E4hrst, und schau dich bewusst um.", "Gottes Sch\u00F6pfung sieht man am besten langsam."], en:["Walk or cycle today where you'd usually take a ride, and really look around.", "You see God's creation best when you slow down."]},
+  {de:["Mal oder zeichne etwas, das dich heute gefreut hat.", "Kreativit\u00E4t ist eine Art, Danke zu sagen."], en:["Paint or draw something that made you happy today.", "Creativity is a way of saying thank you."]},
+  {de:["Biete einer Person in deiner Familie Hilfe an, bevor sie fragt.", "Liebe zeigt sich oft im Alltag."], en:["Offer to help someone in your family before they ask.", "Love often shows in everyday life."]},
+  {de:["Sprich heute etwas Gutes \u00FCber jemanden, der nicht dabei ist.", "Worte k\u00F6nnen aufbauen, auch wenn niemand zuh\u00F6rt."], en:["Say something good today about someone who isn't there.", "Words can build people up, even when nobody's listening."]},
+  {de:["Lade jemanden in deine Kirche oder ins Youth Meeting ein.", "Eine Einladung kann eine T\u00FCr \u00F6ffnen."], en:["Invite someone to your church or to the Youth Meeting.", "An invitation can open a door."]},
+  {de:["Schreib drei Dinge auf, die du an dir selbst magst.", "Gott hat dich mit Absicht so gemacht."], en:["Write down three things you like about yourself.", "God made you this way on purpose."]},
+  {de:["Teile dein Essen oder deinen Zn\u00FCni mit jemandem.", "Teilen macht beide Seiten reicher."], en:["Share your food or your snack with someone.", "Sharing makes both sides richer."]},
+  {de:["Vergib jemandem im Stillen, auch wenn die Person es nie erf\u00E4hrt.", "Vergeben ist zuerst ein Geschenk an dich selbst."], en:["Forgive someone quietly, even if they never find out.", "Forgiving is first of all a gift to yourself."]},
+  {de:["Steh heute zehn Minuten fr\u00FCher auf und starte mit einem kurzen Gebet.", "Ein ruhiger Start ver\u00E4ndert den ganzen Tag."], en:["Get up ten minutes earlier today and start with a short prayer.", "A calm start changes the whole day."]},
+  {de:["Erz\u00E4hl jemandem, wie dir dein Glaube in einer schweren Zeit geholfen hat.", "Deine Geschichte kann f\u00FCr andere ein Licht sein."], en:["Tell someone how your faith helped you through a hard time.", "Your story can be a light for someone else."]},
+  {de:["Probier heute etwas Neues aus, vor dem du ein bisschen Respekt hast.", "Mut w\u00E4chst mit jedem kleinen Schritt."], en:["Try something new today that you feel a bit nervous about.", "Courage grows with every small step."]},
+  {de:["R\u00E4um heute einen Ort auf, der dich schon lange st\u00F6rt, und spende, was du nicht mehr brauchst.", "Was f\u00FCr dich zu viel ist, kann f\u00FCr andere ein Geschenk sein."], en:["Tidy a place today that has bothered you for a long time, and donate what you no longer need.", "What's too much for you can be a gift for someone else."]}
 ];
 let idx = Math.floor(Math.random() * CARDS.length);
 const cardEl = document.getElementById("card");
@@ -788,14 +2120,69 @@ ftabs.forEach(t => t.addEventListener("click", () => {
 }));
 
 /* Contact form: real sending only on the published website, not in the preview */
-document.getElementById("cform").addEventListener("submit", e => {
-  const note = document.getElementById("form-note");
+[["cform","form-note"],["aform","aform-note"]].forEach(([f, n]) => document.getElementById(f).addEventListener("submit", e => {
+  const note = document.getElementById(n);
   if (window.self !== window.top) {
     e.preventDefault();
     note.textContent = lang === "de" ? "Vorschau: Hier wird noch nichts gesendet. Auf der fertigen Website kommt die Nachricht per E-Mail bei mir an." : "Preview: nothing is sent here yet. On the live website, your message reaches me by email.";
     note.hidden = false;
   }
-});
+}));
+/* Anonymous questions via Google Sheets.
+   QA_FORM: the form's prefilled link ("Vorausgef\u00FCllter Link"), QA_CSV: the published CSV link of the "\u00D6ffentlich" sheet.
+   While both are empty, the question form sends by email (FormSubmit) and only questions written into the HTML are shown. */
+const QA_FORM = "https://docs.google.com/forms/d/e/1FAIpQLScYPlUgN2zXm6Ixf8HjN1hB55ebtWl72AcU8AuLClgvn3mRSA/viewform?usp=pp_url&entry.744735628=test";
+const QA_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ6dZsTlhRFPdNMagewXyPP_eUVSl3aeA6EE8_TfpI7as4qIbOtxGb_Peymq9DtqekZO_CmfV9d-CX2/pub?gid=2140642444&single=true&output=csv";
+const community = document.getElementById("community");
+function showCommunity(){ community.hidden = !community.querySelector("details"); }
+function parseCSV(t){
+  const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i];
+    if (q) { if (c === '"') { if (t[i+1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true;
+    else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && t[i+1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += c;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  return rows;
+}
+function addQuestion(q, a){
+  const d = document.createElement("details");
+  const sm = document.createElement("summary"); sm.textContent = q;
+  const inner = document.createElement("div"); inner.className = "inner";
+  const lab = document.createElement("p"); lab.className = "asked";
+  lab.innerHTML = '<span class="de">Anonyme Frage</span><span class="en">Anonymous question</span>';
+  inner.appendChild(lab);
+  a.split(/\n+/).forEach(par => { if (par.trim()) { const p = document.createElement("p"); p.textContent = par.trim(); inner.appendChild(p); } });
+  d.append(sm, inner); community.appendChild(d);
+}
+if (QA_CSV) {
+  fetch(QA_CSV + (QA_CSV.includes("?") ? "&" : "?") + "t=" + Date.now()).then(r => r.ok ? r.text() : "").then(t => {
+    parseCSV(t).slice(1).forEach(([q, a]) => { if (q && a && q.trim() && a.trim() && !q.startsWith("#")) addQuestion(q.trim(), a.trim()); });
+    showCommunity();
+  }).catch(() => {});
+}
+showCommunity();
+if (QA_FORM) {
+  const u = new URL(QA_FORM), entry = [...u.searchParams.keys()].find(k => k.startsWith("entry."));
+  const post = u.origin + u.pathname.replace(/\/viewform$/, "/formResponse");
+  document.getElementById("aform").addEventListener("submit", e => {
+    if (window.self !== window.top) return;
+    e.preventDefault();
+    const note = document.getElementById("aform-note"), ta = document.getElementById("a-msg");
+    const body = new URLSearchParams(); body.set(entry, ta.value);
+    fetch(post, {method:"POST", mode:"no-cors", body}).then(() => {
+      ta.value = "";
+      note.textContent = lang === "de" ? "Danke! Deine Frage ist anonym bei mir angekommen." : "Thank you! Your question reached me anonymously.";
+      note.hidden = false;
+    }).catch(() => {
+      note.textContent = lang === "de" ? "Das hat leider nicht geklappt. Versuch es bitte sp\u00E4ter nochmal." : "Sorry, that didn't work. Please try again later.";
+      note.hidden = false;
+    });
+  });
+}
 
 /* Copy contact */
 document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
