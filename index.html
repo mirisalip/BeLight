@@ -148,6 +148,12 @@ nav a[aria-current="page"]{background:var(--taupe);color:#fff}
 @keyframes fade{from{opacity:.15}to{opacity:1}}
 .verse .foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
 .verse cite{color:var(--gold-ink);font-style:normal;font-weight:700;letter-spacing:.08em;font-size:.85rem;text-transform:uppercase}
+.v-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.speak{display:inline-flex;align-items:center;gap:6px}
+.speak svg{width:16px;height:16px;fill:currentColor}
+.speak .i-off,.speak .s-stop,.speak[aria-pressed="true"] .i-on,.speak[aria-pressed="true"] .s-play{display:none}
+.speak[aria-pressed="true"] .i-off,.speak[aria-pressed="true"] .s-stop{display:inline}
+.s-vol input{width:80px;accent-color:var(--gold);cursor:pointer;vertical-align:middle}
 .again{font:700 .88rem var(--body);padding:8px 14px;border-radius:999px;border:1px solid var(--taupe);background:rgba(255,253,251,.7);color:var(--taupe);cursor:pointer}
 .mine{display:grid;gap:18px;align-content:start}
 .mine .label{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-deep)}
@@ -379,7 +385,15 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
           <blockquote id="m-verse"></blockquote>
           <div class="foot">
             <cite id="m-ref"></cite>
-            <button class="again" type="button" id="again"><span class="de">Anderer Vers</span><span class="en">Another verse</span></button>
+            <div class="v-actions">
+              <button class="again speak" type="button" id="speak" aria-pressed="false">
+                <svg class="i-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <svg class="i-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>
+                <span class="s-play"><span class="de">Vorlesen</span><span class="en">Read aloud</span></span><span class="s-stop"><span class="de">Stopp</span><span class="en">Stop</span></span>
+              </button>
+              <label class="s-vol"><span class="sr"><span class="de">Lautst&#xE4;rke Vorlesen</span><span class="en">Reading volume</span></span><input type="range" id="speak-vol" min="10" max="100" value="100"></label>
+              <button class="again" type="button" id="again"><span class="de">Anderer Vers</span><span class="en">Another verse</span></button>
+            </div>
           </div>
         </div>
         <div class="mine">
@@ -405,11 +419,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         <p class="en">Situations I know myself, and what helped me in them.</p>
       </div>
       <div class="acc narrow">
-        <details open>
+        <details>
           <summary><span class="de">Wenn du wegen deines Glaubens bel&#xE4;chelt wirst</span><span class="en">When people laugh at your faith</span></summary>
           <div class="inner">
             <p class="de">Ich kenne das Gef&#xFC;hl, lieber nichts zu sagen, um nicht komisch zu wirken. Was mir geholfen hat: Ich muss niemanden &#xFC;berzeugen. Ich darf einfach ehrlich sagen, was mir wichtig ist, und dabei freundlich bleiben.</p>
-            <p class="en">I know the feeling of rather saying nothing so I don't seem weird. What helped me: I don't have to convince anyone. I can simply say honestly what matters to me and stay kind.</p>
+            <p class="en">I know the feeling of preferring to say nothing so I don't seem weird. What helped me: I don't have to convince anyone. I can simply say honestly what matters to me and stay kind.</p>
             <p class="tip de">Probier's aus: Antworte beim n&#xE4;chsten Mal mit einem Satz wie &#x201E;F&#xFC;r mich ist das wichtig, weil es mir Halt gibt.&#x201C; Mehr musst du nicht erkl&#xE4;ren.</p>
             <p class="tip en">Try this: next time, answer with one sentence like "It matters to me because it gives me something to hold on to." You don't need to explain more.</p>
           </div>
@@ -420,11 +434,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
             <p class="de">Vor Pr&#xFC;fungen dreht sich bei mir alles im Kopf. Ich habe gelernt, dass mein Wert nicht an einer Note h&#xE4;ngt. Ich gebe mein Bestes und lege den Rest bewusst ab.</p>
             <p class="en">Before exams my head spins. I've learned that my worth doesn't depend on a grade. I do my best and consciously let go of the rest.</p>
             <p class="tip de">Probier's aus: Nimm dir vor dem Lernen zwei Minuten, atme tief und sag dir, was du heute schaffen willst, und was nicht.</p>
-            <p class="tip en">Try this: before studying, take two minutes, breathe deeply and tell yourself what you want to get done today, and what not.</p>
+            <p class="tip en">Try this: before studying, take two minutes, breathe deeply and tell yourself what you want to get done today and what you don't.</p>
           </div>
         </details>
         <details>
-          <summary><span class="de">Wenn du nicht weisst, wohin mit deinem Leben</span><span class="en">When you don't know where your life is going</span></summary>
+          <summary><span class="de">Wenn du nicht weisst, wohin mit deinem Leben</span><span class="en">When you don't know what to do with your life</span></summary>
           <div class="inner">
             <p class="de">Ich habe viele Leidenschaften und wusste lange nicht, welche z&#xE4;hlt. Inzwischen glaube ich: Man muss nicht alles auf einmal wissen. Der n&#xE4;chste kleine Schritt reicht.</p>
             <p class="en">I have many passions and for a long time didn't know which one counts. Now I believe you don't have to know everything at once. The next small step is enough.</p>
@@ -442,7 +456,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
           </div>
         </details>
         <details>
-          <summary><span class="de">Wenn du dich allein f&#xFC;hlst, obwohl Leute um dich sind</span><span class="en">When you feel alone among people</span></summary>
+          <summary><span class="de">Wenn du dich allein f&#xFC;hlst, obwohl Leute um dich sind</span><span class="en">When you feel alone even though people are around you</span></summary>
           <div class="inner">
             <p class="de">Ich kenne Tage, an denen ich unter Menschen bin und mich trotzdem unsichtbar f&#xFC;hle. Mir hilft dann ein ehrliches Gespr&#xE4;ch mit einer Person, statt vieler oberfl&#xE4;chlicher.</p>
             <p class="en">I know days when I'm surrounded by people and still feel invisible. What helps me then is one honest conversation with one person instead of many shallow ones.</p>
@@ -467,7 +481,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
       </div>
 
       <div class="ask narrow">
-        <h3><span class="de">Deine Situation ist nicht dabei?</span><span class="en">Your situation isn't here?</span></h3>
+        <h3><span class="de">Deine Situation ist nicht dabei?</span><span class="en">Your situation isn't listed?</span></h3>
         <p class="de">Frag mich anonym. Ich bekomme deine Frage per E-Mail, ohne Namen und ohne E-Mail-Adresse. Die Fragen ver&#xF6;ffentliche ich dann hier auf der Seite, zusammen mit meiner Antwort.</p>
         <p class="en">Ask me anonymously. I get your question by email, without a name or email address. I'll then publish the questions here on the page, together with my answer.</p>
         <form class="cform" id="aform" action="https://formsubmit.co/miriamsalip1103@gmail.com" method="POST">
@@ -500,7 +514,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         <p class="eyebrow"><span class="de">Mut-Karten</span><span class="en">Courage cards</span></p>
         <h2><span class="de">Eine kleine mutige Tat f&#xFC;r heute</span><span class="en">One small brave act for today</span></h2>
         <p class="de">Glaube zeigt sich oft in kleinen Dingen. Zieh eine Karte und probier sie heute aus. Wenn sie gerade nicht passt, zieh einfach eine neue.</p>
-        <p class="en">Faith often shows in small things. Draw a card and try it today. If it doesn't fit right now, just draw a new one.</p>
+        <p class="en">Faith often shows in small things. Draw a card and try it today. If it doesn't suit you right now, just draw a new one.</p>
         <div><button class="btn" id="draw" type="button"><span class="de">Neue Karte ziehen</span><span class="en">Draw a new card</span></button></div>
       </div>
     </div>
@@ -513,14 +527,14 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         <p class="eyebrow"><span class="de">Neugierig auf Glauben?</span><span class="en">Curious about faith?</span></p>
         <h2><span class="de">Ehrliche Antworten, ohne Druck</span><span class="en">Honest answers, no pressure</span></h2>
         <p class="de">Du glaubst nicht, bist aber neugierig? Sch&#xF6;n, dass du hier bist. Hier erf&#xE4;hrst du, woran ich glaube, wie ich damit aufgewachsen bin und wo du uns kennenlernen kannst.</p>
-        <p class="en">You don't believe, but you're curious? I'm glad you're here. Here you can find out what I believe, how I grew up with it and where you can meet us.</p>
+        <p class="en">You're not a believer, but you're curious? I'm glad you're here. Here you can find out what I believe, how I grew up with it and where you can meet us.</p>
       </div>
       <div class="faith-list">
         <div class="fitem">
         <button class="ftab" type="button" id="ft-glaube" aria-controls="fp-glaube" aria-selected="false" aria-expanded="false">
           <span class="eyebrow">01</span>
           <span class="ft-title"><span class="de">Mein Glaube</span><span class="en">My faith</span></span>
-          <span class="ft-sub"><span class="de">Wer die Kopten sind und was die koptisch-orthodoxe Kirche ausmacht.</span><span class="en">Who the Copts are and what makes the Coptic Orthodox Church.</span></span>
+          <span class="ft-sub"><span class="de">Wer die Kopten sind und was die koptisch-orthodoxe Kirche ausmacht.</span><span class="en">Who the Copts are and what makes the Coptic Orthodox Church special.</span></span>
         </button>
       <div class="fpanel" role="region" id="fp-glaube" aria-labelledby="ft-glaube" hidden>
         <p class="de">Ich bin koptisch-orthodoxe Christin. Unsere Kirche ist eine der &#xE4;ltesten Kirchen der Welt. Hier ein paar Fakten, damit du weisst, woher mein Glaube kommt.</p>
@@ -537,7 +551,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
             <p class="en">We belong to the Oriental Orthodox churches, together with the Armenian, Syriac, Ethiopian, Eritrean and Indian (Malankara) churches.</p></div>
           <div class="fact"><p class="eyebrow"><span class="de">Unser Papst</span><span class="en">Our Pope</span></p>
             <p class="de">An der Spitze steht der Papst von Alexandria und Patriarch des Stuhls des heiligen Markus. Seit 2012 ist das Papst Tawadros II.</p>
-            <p class="en">The church is led by the Pope of Alexandria and Patriarch of the See of Saint Mark. Since 2012 this has been Pope Tawadros II.</p></div>
+            <p class="en">The church is led by the Pope of Alexandria and Patriarch of the Throne of Saint Mark. Since 2012 this has been Pope Tawadros II.</p></div>
           <div class="fact"><p class="eyebrow"><span class="de">Gottesdienst</span><span class="en">Worship</span></p>
             <p class="de">Die Liturgie wird gesungen, auf Koptisch, Arabisch und in der Landessprache. Koptisch ist die letzte Stufe der alt&#xE4;gyptischen Sprache und wird mit griechischen Buchstaben geschrieben.</p>
             <p class="en">The liturgy is sung, in Coptic, Arabic and the local language. Coptic is the last stage of the ancient Egyptian language and is written with Greek letters.</p></div>
@@ -547,7 +561,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
           <div class="fact"><p class="eyebrow"><span class="de">M&#xE4;rtyrer und M&#xF6;nche</span><span class="en">Martyrs and monks</span></p>
             <p class="de">Das M&#xF6;nchtum hat in &#xC4;gypten begonnen, mit dem heiligen Antonius. Unser Kalender z&#xE4;hlt die Jahre ab 284, der &#x201E;&#xC4;ra der M&#xE4;rtyrer&#x201C;. Weihnachten feiern wir am 7. Januar.</p>
             <p class="en">Monasticism began in Egypt, with Saint Anthony. Our calendar counts the years from 284, the "Era of the Martyrs". We celebrate Christmas on 7 January.</p></div>
-          <div class="fact wide"><p class="eyebrow"><span class="de">Verbindung zur Schweiz</span><span class="en">Link to Switzerland</span></p>
+          <div class="fact wide"><p class="eyebrow"><span class="de">Verbindung zur Schweiz</span><span class="en">Connection to Switzerland</span></p>
             <p class="de">Das Christentum in der Schweiz hat &#xE4;gyptische Wurzeln. Der &#xDC;berlieferung nach kam um das Jahr 300 die Theb&#xE4;ische Legion aus Theben in Ober&#xE4;gypten in die Gegend der heutigen Schweiz. Ihre Soldaten waren &#xE4;gyptische Christen, also Kopten.</p>
             <p class="en">Christianity in Switzerland has Egyptian roots. According to tradition, around the year 300 the Theban Legion came from Thebes in Upper Egypt to the area of today's Switzerland. Its soldiers were Egyptian Christians, in other words Copts.</p>
             <p class="de"><strong>Felix, Regula und Exuperantius</strong> sind die Stadtheiligen von Z&#xFC;rich. Felix und seine Schwester Regula geh&#xF6;rten mit ihrem Diener Exuperantius zur Theb&#xE4;ischen Legion. Sie flohen nach Z&#xFC;rich und wurden dort hingerichtet, weil sie ihren Glauben nicht aufgaben. Die Legende erz&#xE4;hlt, dass sie danach ihre K&#xF6;pfe den H&#xFC;gel hinauf trugen, dorthin, wo heute das Grossm&#xFC;nster steht. Bis heute sind die drei im Z&#xFC;rcher Stadtsiegel zu sehen, und die Kopten verehren sie als ihre eigenen Heiligen.</p>
@@ -565,7 +579,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         </button>
       <div class="fpanel" role="region" id="fp-reise" aria-labelledby="ft-reise" hidden>
         <p class="de">Ich bin als Koptin aufgewachsen. Ich wurde in diesen Glauben hineingeboren, und f&#xFC;r mich war er schon immer ein ganz nat&#xFC;rlicher Teil meines Lebens.</p>
-        <p class="en">I grew up as a Copt. I was born into this faith, and it has always been a natural part of my life.</p>
+        <p class="en">I grew up as a Copt. I was born into this faith, and it has always been a completely natural part of my life.</p>
         <p class="de">Seit ich klein bin, gehe ich jede Woche in die Kirche. Unsere Gemeinde ist f&#xFC;r mich wie eine Familie: Wir kennen uns, wir feiern zusammen und wir tragen einander durch schwere Zeiten.</p>
         <p class="en">Since I was little, I've gone to church every week. Our congregation is like a family to me: we know each other, we celebrate together and we carry each other through hard times.</p>
         <p class="de">Der Glaube hat mich immer begleitet. Er hat mich inspiriert, wenn ich kreativ sein wollte, mich ermutigt, wenn ich Angst hatte, und mir Hoffnung gegeben, wenn ich selbst keine mehr gesehen habe.</p>
@@ -582,7 +596,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         </button>
       <div class="fpanel" role="region" id="fp-komm" aria-labelledby="ft-komm" hidden>
         <p class="de">Du bist neugierig und m&#xF6;chtest unsere Gemeinschaft kennenlernen? Du bist herzlich willkommen, auch wenn du niemanden kennst.</p>
-        <p class="en">Are you curious and would like to get to know our community? You're very welcome, even if you don't know anyone.</p>
+        <p class="en">Are you curious and would you like to get to know our community? You're very welcome, even if you don't know anyone.</p>
         <div class="places">
           <div class="place">
             <p class="eyebrow"><span class="de">Unsere Kirche</span><span class="en">Our church</span></p>
@@ -634,14 +648,14 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
           <div class="inner"><p class="de">Es gibt einen Unterschied zwischen dem, was Gott will, und dem, was Gott zul&#xE4;sst. Gott hat uns einen freien Willen gegeben. Leider bedeutet das auch, dass Menschen B&#xF6;ses tun k&#xF6;nnen.</p><p class="de">Aber nicht jedes Leid entsteht durch menschliche Entscheidungen. Wir leben in einer gefallenen Welt, in der auch Krankheit und Tod existieren.</p><p class="de">Was mir dabei am meisten hilft, ist der Gedanke, dass Gott unser Leid nicht einfach von oben beobachtet. Er ist selbst Mensch geworden und hat als Jesus Christus gelitten.</p><p class="de">Ich glaube, Gott verspricht uns kein Leben ohne Leid, aber er verspricht uns, dass wir darin niemals allein sind. Und nur weil wir nicht verstehen, warum etwas passiert, bedeutet das nicht, dass Gott uns verlassen hat.</p><p class="en">There is a difference between what God wants and what God allows. God gave us free will. Sadly, that also means people can do evil.</p><p class="en">But not all suffering comes from human choices. We live in a fallen world where illness and death exist too.</p><p class="en">What helps me most is the thought that God doesn't just watch our suffering from above. He became human himself and suffered as Jesus Christ.</p><p class="en">I believe God doesn't promise us a life without suffering, but he promises that we will never be alone in it. And just because we don't understand why something happens doesn't mean God has left us.</p></div>
         </details>
         <details>
-          <summary><span class="de">Was bringt mir Glaube im Alltag?</span><span class="en">What does faith do for me day to day?</span></summary>
+          <summary><span class="de">Was bringt mir Glaube im Alltag?</span><span class="en">What does faith give me in everyday life?</span></summary>
           <div class="inner"><p class="de">Mir bringt er Hoffnung, Ruhe und das Gef&#xFC;hl, dass mein Leben einen Sinn hat, unabh&#xE4;ngig von Noten, Likes oder der Meinung anderer.</p><p class="en">For me it brings hope, calm and the feeling that my life has meaning, regardless of grades, likes or what others think.</p></div>
         </details>
         <details>
           <summary><span class="de">Wo fange ich an, wenn ich mehr wissen will?</span><span class="en">Where do I start if I want to know more?</span></summary>
           <div class="inner">
             <p class="de">Lies zum Beispiel das Markus-Evangelium. Es ist kurz und erz&#xE4;hlt das Leben von Jesus direkt. Oder komm zu unserem Youth Meeting oder zur Bible Study, die Zeiten findest du oben unter &#x201E;Komm und sieh&#x201C;.</p>
-            <p class="en">Read the Gospel of Mark, for example. It's short and tells the life of Jesus directly. Or come to our Youth Meeting or Bible Study, you'll find the times above under "Come and see".</p>
+            <p class="en">Read the Gospel of Mark, for example. It's short and tells the life of Jesus directly. Or come to our Youth Meeting or Bible Study. You'll find the times above under "Come and see".</p>
             <p class="ref"><a href="#kontakt"><span class="de">Zum Kontakt</span><span class="en">Go to contact</span></a></p>
           </div>
         </details>
@@ -656,7 +670,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
         <p class="eyebrow"><span class="de">Kontakt</span><span class="en">Contact</span></p>
         <h2><span class="de">Schreib mir</span><span class="en">Write to me</span></h2>
         <p class="de">Du hast eine Frage, eine Geschichte oder willst zusammen etwas machen? Ich freue mich &#xFC;ber jede Nachricht.</p>
-        <p class="en">Do you have a question, a story, or want to do something together? I'm happy about every message.</p>
+        <p class="en">Do you have a question, a story, or want to do something together? I'm happy about every single message.</p>
       </div>
       <div class="contact">
         <form class="cform" id="cform" action="https://formsubmit.co/miriamsalip1103@gmail.com" method="POST">
@@ -736,7 +750,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Alle Tage heisst auch die ganz gew\u00F6hnlichen. Wenn ich mich allein f\u00FChle, erinnere ich mich daran, dass Jesus auch an einem langweiligen Dienstag bei mir ist.",
-"en": "Always includes the ordinary days. When I feel lonely, I remind myself that Jesus is with me even on a boring Tuesday."
+"en": "\"Alway\" includes the ordinary days too. When I feel lonely, I remind myself that Jesus is with me even on a boring Tuesday."
 },
 "step": {
 "de": "Sag heute einmal leise: Du bist jetzt da. Mach dann weiter mit dem, was du gerade tust.",
@@ -808,7 +822,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Niemals ist ein grosses Wort. Ich sage es mir vor, wenn ich mich vergessen f\u00FChle, und merke, dass es st\u00E4rker ist als mein Gef\u00FChl.",
-"en": "Never is a big word. I say it to myself when I feel forgotten, and I notice it's stronger than my feeling."
+"en": "\"Never\" is a big word. I say it to myself when I feel forgotten, and I notice it's stronger than my feeling."
 },
 "step": {
 "de": "Schreib den Vers auf einen Zettel und leg ihn dorthin, wo du ihn morgen fr\u00FCh siehst.",
@@ -862,7 +876,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Es gibt keinen Ort, an dem ich zu weit weg bin. Das hilft mir an Abenden, an denen ich mich innerlich weit weg von allen f\u00FChle.",
-"en": "There's no place where I'm too far away. That helps me on evenings when I feel far away from everyone inside."
+"en": "There's no place where I'm too far away. That helps me on evenings when I feel far away from everyone on the inside."
 },
 "step": {
 "de": "Schau heute bewusst einmal in den Himmel und denk daran, dass Gottes Hand dich h\u00E4lt.",
@@ -943,7 +957,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Werfen ist kein vorsichtiges Abgeben. Ich darf meine Last richtig loslassen, statt sie immer wieder zur\u00FCckzunehmen.",
-"en": "Casting isn't a careful handover. I'm allowed to really let go of my burden instead of picking it up again and again."
+"en": "\"Cast\" doesn't mean handing it over carefully. I'm allowed to really let go of my burden instead of picking it up again and again."
 },
 "step": {
 "de": "Schreib alles auf, was dich gerade belastet, und streich eine Sache, die heute warten darf.",
@@ -961,7 +975,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Alle heisst auch die kleinen Sorgen, die ich f\u00FCr zu unwichtig halte. Gott interessiert sich auch f\u00FCr meine Pr\u00FCfung und meinen vollen Kalender.",
-"en": "All includes the small worries I think are too unimportant. God cares about my exam and my full calendar too."
+"en": "\"All\" includes the small worries I think are too unimportant. God cares about my exam and my full calendar too."
 },
 "step": {
 "de": "Bete heute f\u00FCr eine ganz konkrete Sorge, auch wenn sie dir klein vorkommt.",
@@ -1051,7 +1065,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Bew\u00E4hrt heisst f\u00FCr mich: Gott hat mir schon oft geholfen. Wenn ich zur\u00FCckschaue, sehe ich, dass ich auch fr\u00FChere schwere Zeiten geschafft habe.",
-"en": "Proven means to me: God has helped me many times before. When I look back, I see that I got through earlier hard times too."
+"en": "\"A very present help\" means to me: God has helped me many times before. When I look back, I see that I got through earlier hard times too."
 },
 "step": {
 "de": "Denk an eine schwere Zeit, die du schon hinter dir hast, und schreib auf, was dir damals geholfen hat.",
@@ -1150,7 +1164,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Glaube ist f\u00FCr mich kein Wissen auf Knopfdruck, sondern Vertrauen. Wie bei einem Freund, dem ich glaube, auch wenn ich nicht alles nachpr\u00FCfen kann.",
-"en": "To me faith isn't knowledge at the push of a button but trust. Like a friend I believe, even if I can't check everything."
+"en": "To me faith isn't knowledge at the push of a button but trust. Like with a friend I believe, even if I can't check everything."
 },
 "step": {
 "de": "Schreib eine Sache auf, auf die du hoffst, auch wenn du sie noch nicht siehst.",
@@ -1168,7 +1182,7 @@ const MOODS = [
 ],
 "help": {
 "de": "Ohne Vorwurf finde ich wichtig. Ich darf Gott alles fragen, ohne Angst, dass meine Fragen dumm sind.",
-"en": "Without reproach matters to me. I can ask God anything without fearing my questions are stupid."
+"en": "It matters to me that God gives \"and upbraideth not\", without scolding. I can ask God anything without fearing my questions are stupid."
 },
 "step": {
 "de": "Formulier deine gr\u00F6sste Frage in einem Satz. Du musst sie heute nicht beantworten.",
@@ -1190,7 +1204,7 @@ const MOODS = [
 },
 "step": {
 "de": "Gib heute eine Entscheidung, \u00FCber die du gr\u00FCbelst, bewusst im Gebet ab.",
-"en": "Consciously hand over a decision you keep brooding over in prayer today."
+"en": "Today, consciously hand over in prayer a decision you keep brooding over."
 }
 },
 {
@@ -1510,7 +1524,7 @@ const MOODS = [
 ],
 "help": {
 "de": "In allem heisst nicht f\u00FCr alles. Auch an einem schwierigen Tag finde ich meistens etwas Kleines, wof\u00FCr ich danken kann.",
-"en": "In everything doesn't mean for everything. Even on a difficult day I can usually find something small to be thankful for."
+"en": "\"In every thing\" doesn't mean \"for everything\". Even on a difficult day I can usually find something small to be thankful for."
 },
 "step": {
 "de": "Such heute Abend etwas Gutes in einem Moment, der eigentlich schwierig war.",
@@ -1667,7 +1681,7 @@ const MOODS = [
 "id": "ziellos",
 "name": {
 "de": "Ziellos",
-"en": "Lost"
+"en": "Aimless"
 },
 "verses": [
 {
@@ -1928,7 +1942,7 @@ const MOODS = [
 },
 "step": {
 "de": "Denk an eine schwere Zeit zur\u00FCck und such eine Sache, die daraus Gutes geworden ist.",
-"en": "Think back to a hard time and find one thing that turned out good from it."
+"en": "Think back to a hard time and find one good thing that came out of it."
 }
 },
 {
@@ -2065,7 +2079,37 @@ function renderMood(animate){
   });
   if (animate) { verseEl.classList.remove("fade"); void verseEl.offsetWidth; verseEl.classList.add("fade"); }
 }
+/* Read the current verse aloud with the device's own voice */
+const speakBtn = document.getElementById("speak"), speakVol = document.getElementById("speak-vol");
+const canSpeak = "speechSynthesis" in window;
+if (!canSpeak) { speakBtn.hidden = true; speakVol.parentElement.hidden = true; }
+try { const v = localStorage.getItem("belight-speak-vol"); if (v !== null) speakVol.value = v; } catch (e) {}
+function stopSpeaking(){ if (canSpeak) speechSynthesis.cancel(); speakBtn.setAttribute("aria-pressed", false); }
+function pickVoice(l){
+  const vs = speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith(l));
+  const pref = l === "de" ? ["de-ch", "de-de"] : ["en-gb", "en-us"];
+  for (const p of pref) { const v = vs.find(v => v.lang.toLowerCase().replace("_", "-") === p); if (v) return v; }
+  return vs[0] || null;
+}
+function speakVerse(){
+  const [text, ref] = current.verses[verseIdx][lang];
+  const u = new SpeechSynthesisUtterance(text + " " + ref.replace(/(\d),(\d)/, "$1, $2").replace("\u2013", lang === "de" ? " bis " : " to "));
+  u.lang = lang === "de" ? "de-DE" : "en-GB";
+  const v = pickVoice(lang); if (v) u.voice = v;
+  u.rate = 0.92; u.volume = speakVol.value / 100;
+  u.onend = u.onerror = () => speakBtn.setAttribute("aria-pressed", false);
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+  speakBtn.setAttribute("aria-pressed", true);
+}
+speakBtn.addEventListener("click", () => { if (speakBtn.getAttribute("aria-pressed") === "true") stopSpeaking(); else speakVerse(); });
+speakVol.addEventListener("input", () => {
+  try { localStorage.setItem("belight-speak-vol", speakVol.value); } catch (e) {}
+  if (speakBtn.getAttribute("aria-pressed") === "true") speakVerse();
+});
+if (canSpeak) speechSynthesis.getVoices();
+window.addEventListener("hashchange", stopSpeaking);
 function pickVerse(){
+  stopSpeaking();
   const n = current.verses.length;
   let i; do { i = Math.floor(Math.random() * n); } while (n > 1 && i === verseIdx);
   verseIdx = i;
@@ -2102,7 +2146,7 @@ const CARDS = [
   {de:["Stell im Unterricht oder an der Uni eine Frage, die du dich sonst nicht trauen w\u00FCrdest.", "Wer fragt, lernt, und hilft oft auch anderen."], en:["Ask a question in class or at uni that you wouldn't normally dare to ask.", "Asking helps you learn, and often helps others too."]},
   {de:["Schreib einer Person, die dich gepr\u00E4gt hat, warum sie dir wichtig ist.", "Menschen erfahren oft zu selten, was sie bewirken."], en:["Write to someone who shaped you and tell them why they matter to you.", "People too rarely hear what difference they make."]},
   {de:["Bring heute etwas Liegengebliebenes zu Ende.", "Kleine Erfolge machen Mut f\u00FCr grosse."], en:["Finish something today that you've left lying around.", "Small wins give you courage for big ones."]},
-  {de:["Geh heute zu Fuss oder mit dem Velo, wo du sonst f\u00E4hrst, und schau dich bewusst um.", "Gottes Sch\u00F6pfung sieht man am besten langsam."], en:["Walk or cycle today where you'd usually take a ride, and really look around.", "You see God's creation best when you slow down."]},
+  {de:["Geh heute zu Fuss oder mit dem Velo, wo du sonst f\u00E4hrst, und schau dich bewusst um.", "Gottes Sch\u00F6pfung sieht man am besten langsam."], en:["Walk or cycle today where you'd usually take the tram or a car, and really look around.", "You see God's creation best when you slow down."]},
   {de:["Mal oder zeichne etwas, das dich heute gefreut hat.", "Kreativit\u00E4t ist eine Art, Danke zu sagen."], en:["Paint or draw something that made you happy today.", "Creativity is a way of saying thank you."]},
   {de:["Biete einer Person in deiner Familie Hilfe an, bevor sie fragt.", "Liebe zeigt sich oft im Alltag."], en:["Offer to help someone in your family before they ask.", "Love often shows in everyday life."]},
   {de:["Sprich heute etwas Gutes \u00FCber jemanden, der nicht dabei ist.", "Worte k\u00F6nnen aufbauen, auch wenn niemand zuh\u00F6rt."], en:["Say something good today about someone who isn't there.", "Words can build people up, even when nobody's listening."]},
@@ -2161,6 +2205,7 @@ mVol.addEventListener("input", () => { setVolume(); try { localStorage.setItem("
 
 /* Language switch */
 function setLang(l){
+  if (lang !== l) stopSpeaking();
   lang = l;
   document.body.classList.toggle("lang-de", l === "de");
   document.body.classList.toggle("lang-en", l === "en");
