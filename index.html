@@ -2067,6 +2067,7 @@ function renderMood(animate){
   const [text, ref] = current.verses[verseIdx][lang];
   verseEl.textContent = lang === "de" ? "\u201E" + text + "\u201C" : "\u201C" + text + "\u201D";
   document.getElementById("m-ref").textContent = ref;
+  updateSpeakBtn();
   const v = current.verses[verseIdx];
   document.getElementById("m-text").textContent = v.help[lang];
   document.getElementById("m-step").textContent = v.step[lang];
@@ -2079,34 +2080,40 @@ function renderMood(animate){
   });
   if (animate) { verseEl.classList.remove("fade"); void verseEl.offsetWidth; verseEl.classList.add("fade"); }
 }
-/* Read the current verse aloud with the device's own voice */
+/* Read the current verse aloud with Miriam's own recordings (stimme/<lang>-<mood>-<nr>.mp3).
+   VOICE lists the recordings that exist; the button only shows for those. */
+const VOICE = new Set(["de-aengstlich-01", "de-aengstlich-02", "de-aengstlich-03", "de-aengstlich-04", "de-aengstlich-05", "de-aengstlich-06", "de-aengstlich-07", "de-aengstlich-08", "de-aengstlich-09", "de-aengstlich-10", "de-dankbar-01", "de-dankbar-02", "de-dankbar-03", "de-dankbar-04", "de-dankbar-05", "de-dankbar-06", "de-dankbar-07", "de-dankbar-08", "de-dankbar-09", "de-dankbar-10", "de-einsam-01", "de-einsam-02", "de-einsam-03", "de-einsam-04", "de-einsam-05", "de-einsam-06", "de-einsam-07", "de-einsam-08", "de-einsam-09", "de-einsam-10", "de-hoffnungslos-01", "de-hoffnungslos-02", "de-hoffnungslos-03", "de-hoffnungslos-04", "de-hoffnungslos-05", "de-hoffnungslos-06", "de-hoffnungslos-07", "de-hoffnungslos-08", "de-hoffnungslos-09", "de-hoffnungslos-10", "de-ueberfordert-01", "de-ueberfordert-02", "de-ueberfordert-03", "de-ueberfordert-04", "de-ueberfordert-05", "de-ueberfordert-06", "de-ueberfordert-07", "de-ueberfordert-08", "de-ueberfordert-09", "de-ueberfordert-10", "de-ziellos-01", "de-ziellos-02", "de-ziellos-03", "de-ziellos-04", "de-ziellos-05", "de-ziellos-06", "de-ziellos-07", "de-ziellos-08", "de-ziellos-09", "de-ziellos-10", "de-zweifelnd-01", "de-zweifelnd-02", "de-zweifelnd-03", "de-zweifelnd-04", "de-zweifelnd-05", "de-zweifelnd-06", "de-zweifelnd-07", "de-zweifelnd-08", "de-zweifelnd-09", "de-zweifelnd-10"]);
 const speakBtn = document.getElementById("speak"), speakVol = document.getElementById("speak-vol");
-const canSpeak = "speechSynthesis" in window;
-if (!canSpeak) { speakBtn.hidden = true; speakVol.parentElement.hidden = true; }
+const voiceAudio = new Audio(); voiceAudio.preload = "none";
+let voiceGain = null;
 try { const v = localStorage.getItem("belight-speak-vol"); if (v !== null) speakVol.value = v; } catch (e) {}
-function stopSpeaking(){ if (canSpeak) speechSynthesis.cancel(); speakBtn.setAttribute("aria-pressed", false); }
-function pickVoice(l){
-  const vs = speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().startsWith(l));
-  const pref = l === "de" ? ["de-ch", "de-de"] : ["en-gb", "en-us"];
-  for (const p of pref) { const v = vs.find(v => v.lang.toLowerCase().replace("_", "-") === p); if (v) return v; }
-  return vs[0] || null;
+function voiceKey(){ return lang + "-" + current.id + "-" + String(verseIdx + 1).padStart(2, "0"); }
+function updateSpeakBtn(){
+  const has = VOICE.has(voiceKey());
+  speakBtn.hidden = !has; speakVol.parentElement.hidden = !has;
 }
+function setSpeakVolume(){ const v = speakVol.value / 100; if (voiceGain) voiceGain.gain.value = v; else voiceAudio.volume = v; }
+function initVoice(){
+  if (voiceGain) return;
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = "playback";
+    const Ctx = window.AudioContext || window.webkitAudioContext, ctx = new Ctx();
+    voiceGain = ctx.createGain();
+    ctx.createMediaElementSource(voiceAudio).connect(voiceGain).connect(ctx.destination);
+    initVoice.ctx = ctx;
+  } catch (e) { voiceGain = null; }
+}
+function stopSpeaking(){ voiceAudio.pause(); speakBtn.setAttribute("aria-pressed", false); }
 function speakVerse(){
-  const [text, ref] = current.verses[verseIdx][lang];
-  const u = new SpeechSynthesisUtterance(text + " " + ref.replace(/(\d),(\d)/, "$1, $2").replace("\u2013", lang === "de" ? " bis " : " to "));
-  u.lang = lang === "de" ? "de-DE" : "en-GB";
-  const v = pickVoice(lang); if (v) u.voice = v;
-  u.rate = 0.92; u.volume = speakVol.value / 100;
-  u.onend = u.onerror = () => speakBtn.setAttribute("aria-pressed", false);
-  speechSynthesis.cancel(); speechSynthesis.speak(u);
-  speakBtn.setAttribute("aria-pressed", true);
+  initVoice();
+  if (initVoice.ctx && initVoice.ctx.state === "suspended") initVoice.ctx.resume();
+  setSpeakVolume();
+  voiceAudio.src = "stimme/" + voiceKey() + ".mp3";
+  voiceAudio.play().then(() => speakBtn.setAttribute("aria-pressed", true)).catch(() => stopSpeaking());
 }
+voiceAudio.addEventListener("ended", stopSpeaking);
 speakBtn.addEventListener("click", () => { if (speakBtn.getAttribute("aria-pressed") === "true") stopSpeaking(); else speakVerse(); });
-speakVol.addEventListener("input", () => {
-  try { localStorage.setItem("belight-speak-vol", speakVol.value); } catch (e) {}
-  if (speakBtn.getAttribute("aria-pressed") === "true") speakVerse();
-});
-if (canSpeak) speechSynthesis.getVoices();
+speakVol.addEventListener("input", () => { setSpeakVolume(); try { localStorage.setItem("belight-speak-vol", speakVol.value); } catch (e) {} });
 window.addEventListener("hashchange", stopSpeaking);
 function pickVerse(){
   stopSpeaking();
