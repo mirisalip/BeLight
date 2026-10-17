@@ -242,7 +242,17 @@ nav a[aria-current="page"]{background:var(--taupe);color:#fff}
 .insta{font-weight:700;font-size:1.05rem}
 .copy{margin-left:auto;font:700 .85rem var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--taupe);cursor:pointer}
 
-footer{border-top:1px solid var(--line);padding-block:32px 48px;color:var(--muted);font-size:.88rem}
+.music{position:fixed;right:16px;bottom:16px;z-index:40;display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;box-shadow:0 8px 24px rgba(90,70,60,.14)}
+.m-play{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--taupe);color:#fff;font:700 .85rem var(--body);padding:8px 14px 8px 10px;cursor:pointer}
+.m-play svg{width:18px;height:18px;fill:currentColor}
+.m-play .i-pause,.m-play[aria-pressed="true"] .i-play{display:none}
+.m-play[aria-pressed="true"] .i-pause{display:block}
+.m-vol{display:flex;align-items:center;gap:6px;color:var(--taupe)}
+.m-vol svg{width:20px;height:20px;fill:currentColor;flex:none}
+.m-vol input{width:90px;accent-color:var(--gold);cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:600px){.music{right:12px;bottom:12px;padding-right:10px}.m-play .m-label{display:none}.m-play{padding:9px}.m-vol input{width:70px}}
+footer{border-top:1px solid var(--line);padding-block:32px 88px;color:var(--muted);font-size:.88rem}
 footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-between}
 </style>
 </head>
@@ -269,6 +279,19 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
     </div>
   </div>
 </header>
+
+<div class="music" id="music">
+  <audio id="bg-audio" src="musik.mp3" loop preload="none"></audio>
+  <button class="m-play" type="button" id="m-play" aria-pressed="false">
+    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+    <span class="m-label"><span class="de">Musik</span><span class="en">Music</span></span>
+  </button>
+  <label class="m-vol"><span class="sr"><span class="de">Lautst&#xE4;rke</span><span class="en">Volume</span></span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="range" id="m-vol" min="0" max="100" value="40">
+  </label>
+</div>
 
 <main>
   <!-- Home -->
@@ -432,8 +455,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
 
       <div class="ask narrow">
         <h3><span class="de">Deine Situation ist nicht dabei?</span><span class="en">Your situation isn't here?</span></h3>
-        <p class="de">Frag mich anonym. Ich bekomme deine Frage per E-Mail, ohne Namen und ohne E-Mail-Adresse. Ausgew&#xE4;hlte Fragen beantworte ich dann hier auf der Seite, zusammen mit meiner Antwort.</p>
-        <p class="en">Ask me anonymously. I get your question by email, without a name or email address. I'll answer selected questions here on the page, together with my answer.</p>
+        <p class="de">Frag mich anonym. Ich bekomme deine Frage per E-Mail, ohne Namen und ohne E-Mail-Adresse. Die Fragen ver&#xF6;ffentliche ich dann hier auf der Seite, zusammen mit meiner Antwort.</p>
+        <p class="en">Ask me anonymously. I get your question by email, without a name or email address. I'll then publish the questions here on the page, together with my answer.</p>
         <form class="cform" id="aform" action="https://formsubmit.co/miriamsalip1103@gmail.com" method="POST">
           <input type="hidden" name="_subject" value="Neue anonyme Frage &#xFC;ber BeLight (Glaube im Alltag)">
           <input type="hidden" name="_template" value="table">
@@ -2093,6 +2116,15 @@ document.getElementById("draw").addEventListener("click", () => {
   cardEl.classList.remove("flip"); void cardEl.offsetWidth; cardEl.classList.add("flip");
   setTimeout(renderCard, 200);
 });
+
+/* Background music: starts only on click (browsers block autoplay) */
+const audio = document.getElementById("bg-audio"), mPlay = document.getElementById("m-play"), mVol = document.getElementById("m-vol");
+try { const v = localStorage.getItem("belight-vol"); if (v !== null) mVol.value = v; } catch (e) {}
+audio.volume = mVol.value / 100;
+mPlay.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+audio.addEventListener("play", () => mPlay.setAttribute("aria-pressed", true));
+audio.addEventListener("pause", () => mPlay.setAttribute("aria-pressed", false));
+mVol.addEventListener("input", () => { audio.volume = mVol.value / 100; try { localStorage.setItem("belight-vol", mVol.value); } catch (e) {} });
 
 /* Language switch */
 function setLang(l){
