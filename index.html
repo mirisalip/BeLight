@@ -2133,11 +2133,31 @@ document.getElementById("draw").addEventListener("click", () => {
 /* Background music: starts only on click (browsers block autoplay) */
 const audio = document.getElementById("bg-audio"), mPlay = document.getElementById("m-play"), mVol = document.getElementById("m-vol");
 try { const v = localStorage.getItem("belight-vol"); if (v !== null) mVol.value = v; } catch (e) {}
-audio.volume = mVol.value / 100;
-mPlay.addEventListener("click", () => { if (audio.paused) audio.play().catch(() => {}); else audio.pause(); });
+/* iPhones ignore audio.volume, so the volume runs through a Web Audio gain node */
+let gainNode = null;
+function setVolume(){ const v = mVol.value / 100; if (gainNode) gainNode.gain.value = v; else audio.volume = v; }
+function initAudio(){
+  if (gainNode) return;
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = "playback"; /* keeps sound on iPhones in silent mode */
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new Ctx();
+    gainNode = ctx.createGain();
+    ctx.createMediaElementSource(audio).connect(gainNode).connect(ctx.destination);
+    audio.volume = 1;
+    initAudio.ctx = ctx;
+  } catch (e) { gainNode = null; }
+  setVolume();
+}
+setVolume();
+mPlay.addEventListener("click", () => {
+  initAudio();
+  if (initAudio.ctx && initAudio.ctx.state === "suspended") initAudio.ctx.resume();
+  if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+});
 audio.addEventListener("play", () => mPlay.setAttribute("aria-pressed", true));
 audio.addEventListener("pause", () => mPlay.setAttribute("aria-pressed", false));
-mVol.addEventListener("input", () => { audio.volume = mVol.value / 100; try { localStorage.setItem("belight-vol", mVol.value); } catch (e) {} });
+mVol.addEventListener("input", () => { setVolume(); try { localStorage.setItem("belight-vol", mVol.value); } catch (e) {} });
 
 /* Language switch */
 function setLang(l){
