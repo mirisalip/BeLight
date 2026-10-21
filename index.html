@@ -173,30 +173,52 @@ nav a[aria-current="page"]{background:var(--taupe);color:#fff}
 .step .note{font-size:.9rem;color:var(--muted,#7a6a60);margin-top:6px}
 @media (max-width:760px){.moods{grid-template-columns:1fr}.mood-col.pos .mood-list{justify-content:flex-start}.mood-col.pos .mood-label{text-align:left}.mood-panel{grid-template-columns:1fr}.mood-panel>div{padding:26px}}
 
-/* advent calendar */
-.adv-status{font-weight:700;color:var(--sage-deep);margin:0 0 16px}
-.adv-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;max-width:820px}
-.door{position:relative;aspect-ratio:1;border-radius:18px;border:1.5px solid var(--line);cursor:pointer;font:600 clamp(1.5rem,3vw,2.1rem) var(--body);color:var(--taupe);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;background:var(--surface)}
-.door:nth-child(3n+1){background:linear-gradient(150deg,#FBEDE6,var(--blush))}
-.door:nth-child(3n+2){background:linear-gradient(150deg,#F2F4EC,var(--sage))}
-.door:nth-child(3n){background:linear-gradient(150deg,#FFF8EC,#F1E3CC)}
-.door:hover:not([aria-disabled="true"]){transform:translateY(-3px);box-shadow:0 10px 22px rgba(90,70,60,.14)}
-.door[aria-disabled="true"]{cursor:not-allowed;opacity:.55}
-.door[aria-disabled="true"]::after{content:"";position:absolute;right:9px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--muted);opacity:.5}
-.door.today{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,146,58,.25)}
-.door.seen{color:var(--gold-ink)}
-.door.seen::before{content:"\2713";position:absolute;right:9px;top:4px;font-size:.85rem;color:var(--sage-deep)}
-.door.active{outline:3px solid var(--taupe);outline-offset:2px}
-.door.shake{animation:shake .35s}
-@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.adv-open{margin-top:24px;max-width:820px;border-radius:24px;border:1px solid var(--line);padding:32px;background:radial-gradient(circle at 80% 10%,#FFF4E2 0,transparent 45%),linear-gradient(160deg,var(--blush),#F1E6D8 55%,var(--sage));display:grid;gap:14px;animation:fade .5s ease}
-.adv-day{font-family:var(--script);font-size:2rem;line-height:1;color:var(--taupe);margin:0}
-.adv-open blockquote{margin:0;font-family:var(--serif);font-size:clamp(1.4rem,2.6vw,1.85rem);font-weight:600;line-height:1.3;text-wrap:balance}
-.adv-open cite{color:var(--gold-ink);font-style:normal;font-weight:700;letter-spacing:.08em;font-size:.85rem;text-transform:uppercase}
-.adv-task{background:rgba(255,253,251,.75);border-radius:16px;padding:16px 18px}
-.adv-task .label{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-deep);margin:0 0 4px}
-.adv-task p{margin:0}
-@media (max-width:640px){.adv-grid{grid-template-columns:repeat(4,1fr);gap:9px}.adv-open{padding:24px}}
+/* advent calendar: gifts that unwrap into a flip card */
+.adv-status{font-weight:700;color:var(--sage-deep);margin:0 0 18px;min-height:1.7em}
+.adv-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px 14px;max-width:840px}
+.gift{--c:#E7B7A6;--r:var(--gold);position:relative;aspect-ratio:1;border:0;background:none;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.gift:nth-child(4n+2){--c:#B5C19F}
+.gift:nth-child(4n+3){--c:#C9AE9E}
+.gift:nth-child(4n){--c:#EDD9B8}
+.gift .box,.gift .lid{position:absolute;background-color:var(--c);background-image:linear-gradient(90deg,transparent 43%,var(--r) 43%,var(--r) 57%,transparent 57%);box-shadow:inset 0 -6px 10px rgba(74,59,53,.08)}
+.gift .box{left:10%;right:10%;top:38%;bottom:4%;border-radius:0 0 10px 10px}
+.gift .lid{left:4%;right:4%;top:26%;height:16%;border-radius:8px;filter:brightness(1.04);box-shadow:0 3px 6px rgba(74,59,53,.12);transition:transform .55s cubic-bezier(.3,1.6,.5,1),opacity .55s}
+.gift .lid::before,.gift .lid::after{content:"";position:absolute;bottom:92%;width:30%;height:95%;border:4px solid var(--r);border-radius:50% 50% 50% 50%/60% 60% 40% 40%}
+.gift .lid::before{right:50%;transform:rotate(-28deg);transform-origin:100% 100%}
+.gift .lid::after{left:50%;transform:rotate(28deg);transform-origin:0 100%}
+.gift .tag{position:absolute;white-space:nowrap;left:50%;top:68%;transform:translate(-50%,-50%);min-width:2.1em;padding:2px 6px;border-radius:999px;background:var(--surface);color:var(--taupe);font:700 clamp(.95rem,1.8vw,1.2rem) var(--body);box-shadow:0 2px 6px rgba(74,59,53,.15)}
+.gift:hover:not([aria-disabled="true"]) .lid{transform:translateY(-6px) rotate(-3deg)}
+.gift:hover:not([aria-disabled="true"]){animation:wiggle .5s}
+.gift[aria-disabled="true"]{cursor:not-allowed}
+.gift[aria-disabled="true"] .box,.gift[aria-disabled="true"] .lid{filter:saturate(.45) brightness(1.08);opacity:.6}
+.gift.today .tag{background:var(--gold);color:#fff}
+.gift.today{filter:drop-shadow(0 0 10px rgba(200,146,58,.45))}
+.gift.seen .lid{transform:translate(18%,-55%) rotate(16deg)}
+.gift.seen .tag::after{content:" \2713";color:var(--sage-deep)}
+.gift.unwrap .lid{transform:translate(30%,-160%) rotate(35deg);opacity:0}
+.gift.unwrap .box{animation:pop .6s ease}
+.gift.shake{animation:shake .35s}
+@keyframes wiggle{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@keyframes pop{40%{transform:scale(1.08,.94)}100%{transform:scale(1)}}
+.adv-modal{position:fixed;inset:0;z-index:60;background:rgba(74,59,53,.45);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:16px}
+.adv-stage{position:relative;width:min(400px,100%);animation:rise .55s cubic-bezier(.2,1.3,.4,1)}
+@keyframes rise{from{transform:translateY(60px) scale(.6);opacity:0}to{transform:none;opacity:1}}
+.adv-close{position:absolute;right:-6px;top:-50px;width:42px;height:42px;border-radius:50%;border:0;background:var(--surface);color:var(--taupe);font-size:1.6rem;line-height:1;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.flip{display:block;width:100%;aspect-ratio:3/4;border:0;padding:0;background:none;perspective:1400px;cursor:pointer;font:inherit;color:inherit;text-align:center}
+.flip-in{position:relative;display:block;width:100%;height:100%;transition:transform .8s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip[aria-pressed="true"] .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:22px;padding:30px 26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 20px 50px rgba(40,30,25,.3);border:6px solid var(--surface)}
+.face.front{background:radial-gradient(circle at 50% 12%,#FFF4E2 0,transparent 45%),linear-gradient(165deg,var(--blush),#F1E6D8 55%,var(--sage))}
+.face.back{background:var(--surface);transform:rotateY(180deg);background-image:radial-gradient(circle at 50% 0,#FBEFD6 0,transparent 55%)}
+.adv-day{font-family:var(--script);font-size:2.1rem;line-height:1;color:var(--taupe)}
+.adv-verse{font-family:var(--serif);font-size:clamp(1.3rem,5vw,1.65rem);font-weight:600;line-height:1.3;text-wrap:balance;color:var(--ink)}
+.adv-ref{color:var(--gold-ink);font-weight:700;letter-spacing:.08em;font-size:.8rem;text-transform:uppercase}
+.adv-hint{font-size:.8rem;color:var(--muted);margin-top:6px}
+.adv-label{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-deep)}
+.adv-task{font-size:1.12rem;line-height:1.55;color:var(--ink);text-wrap:pretty}
+.adv-sign{font-family:var(--script);font-size:1.6rem;color:var(--gold);margin-top:8px}
+@media (max-width:640px){.adv-grid{grid-template-columns:repeat(4,1fr);gap:14px 10px}.gift .lid::before,.gift .lid::after{border-width:3px}}
 
 /* accordions */
 .acc{display:grid;gap:12px}
@@ -570,19 +592,33 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:8px 28px;justify-content:space-betw
     <div class="wrap">
       <div class="page-head">
         <p class="eyebrow"><span class="de">Adventskalender</span><span class="en">Advent calendar</span></p>
-        <h2><span class="de">Jeden Tag ein bisschen Licht bis Weihnachten</span><span class="en">A little light every day until Christmas</span></h2>
-        <p class="de">Vom 1. bis 24. Dezember geht jeden Tag ein T&#xFC;rchen auf. Darin findest du einen Bibelvers und eine kleine Aufgabe f&#xFC;r den Tag. Wenn du einen Tag verpasst, kannst du das T&#xFC;rchen sp&#xE4;ter noch &#xF6;ffnen.</p>
-        <p class="en">From 1 to 24 December, one door opens every day. Behind it you'll find a Bible verse and a small task for the day. If you miss a day, you can still open that door later.</p>
+        <h2><span class="de">24 Geschenke bis Weihnachten</span><span class="en">24 gifts until Christmas</span></h2>
+        <p class="de">Weihnachten hat viel mit Liebe, Geben, Familie und Freunden zu tun. Vom 1. bis 24. Dezember darfst du jeden Tag ein Geschenk auspacken. Darin liegt eine Karte mit einem Bibelvers. Dreh sie um, dann findest du deine Aufgabe f&#xFC;r den Tag.</p>
+        <p class="en">Christmas is so much about love, giving, family and friends. From 1 to 24 December you can unwrap one gift every day. Inside is a card with a Bible verse. Turn it over to find your task for the day.</p>
       </div>
-      <p class="adv-status" id="adv-status"></p>
+      <p class="adv-status" id="adv-status" aria-live="polite"></p>
       <div class="adv-grid" id="adv-grid"></div>
-      <div class="adv-open" id="adv-open" hidden>
-        <p class="adv-day" id="adv-day"></p>
-        <blockquote id="adv-verse"></blockquote>
-        <cite id="adv-ref"></cite>
-        <div class="adv-task"><p class="label"><span class="de">Deine Aufgabe f&#xFC;r heute</span><span class="en">Your task for today</span></p><p id="adv-task"></p></div>
+      <p class="sources"><span class="de">Wenn du einen Tag verpasst, kannst du das Geschenk sp&#xE4;ter noch auspacken. In der koptischen Kirche bereiten wir uns 43 Tage lang mit dem Weihnachtsfasten auf Weihnachten vor und feiern es am 7. Januar. Bis dahin bleiben alle Geschenke offen.</span><span class="en">If you miss a day, you can still unwrap that gift later. In the Coptic Church we prepare for Christmas with the 43-day Nativity Fast and celebrate it on 7 January. Until then, all gifts stay open.</span></p>
+    </div>
+    <div class="adv-modal" id="adv-modal" hidden>
+      <div class="adv-stage" role="dialog" aria-modal="true" aria-labelledby="adv-day">
+        <button class="adv-close" type="button" id="adv-close" aria-label="Schliessen">&times;</button>
+        <button class="flip" type="button" id="adv-card" aria-pressed="false">
+          <span class="flip-in">
+            <span class="face front">
+              <span class="adv-day" id="adv-day"></span>
+              <span class="adv-verse" id="adv-verse"></span>
+              <span class="adv-ref" id="adv-ref"></span>
+              <span class="adv-hint"><span class="de">Tippe auf die Karte, um sie umzudrehen</span><span class="en">Tap the card to turn it over</span></span>
+            </span>
+            <span class="face back">
+              <span class="adv-label"><span class="de">Deine Aufgabe f&#xFC;r heute</span><span class="en">Your task for today</span></span>
+              <span class="adv-task" id="adv-task"></span>
+              <span class="adv-sign">BeLight</span>
+            </span>
+          </span>
+        </button>
       </div>
-      <p class="sources"><span class="de">In der koptischen Kirche bereiten wir uns 43 Tage lang mit dem Weihnachtsfasten auf Weihnachten vor und feiern es am 7. Januar. Dieser Kalender begleitet dich durch den Dezember, egal wann du feierst.</span><span class="en">In the Coptic Church we prepare for Christmas with the 43-day Nativity Fast and celebrate it on 7 January. This calendar walks with you through December, whenever you celebrate.</span></p>
     </div>
   </section>
 
@@ -3252,10 +3288,11 @@ audio.addEventListener("play", () => mPlay.setAttribute("aria-pressed", true));
 audio.addEventListener("pause", () => mPlay.setAttribute("aria-pressed", false));
 mVol.addEventListener("input", () => { setVolume(); try { localStorage.setItem("belight-vol", mVol.value); } catch (e) {} });
 
-/* Advent calendar: door n opens from 1 December onward (all doors stay open until 6 January). Test with ?advent=12 */
-const ADVENT = [{"de": ["Das Volk, das in der Finsternis wandelt, hat ein grosses Licht gesehen; \u00FCber den Bewohnern des Landes der Todesschatten ist ein Licht aufgeleuchtet.", "Jesaja 9,1", "Z\u00FCnde heute Abend eine Kerze an und bete f\u00FCr eine Person, die gerade im Dunkeln steht."], "en": ["The people walking in darkness have seen a great light; on those living in the land of deep darkness a light has dawned.", "Isaiah 9:2", "Light a candle tonight and pray for someone who is going through a dark time."]}, {"de": ["Ich harre auf den HERRN, meine Seele harrt, und ich hoffe auf sein Wort.", "Psalm 130,5", "Schreib auf, worauf du gerade wartest. Gib es Gott im Gebet und lass ihn das Timing bestimmen."], "en": ["I wait for the LORD, my whole being waits, and in his word I put my hope.", "Psalm 130:5", "Write down what you're waiting for right now. Give it to God in prayer and let him decide the timing."]}, {"de": ["Eine Stimme ruft: In der W\u00FCste bereitet den Weg des HERRN, ebnet in der Steppe eine Strasse f\u00FCr unseren Gott!", "Jesaja 40,3", "\u00DCberleg dir, was zwischen dir und Gott steht. R\u00E4um heute eine kleine Sache davon aus dem Weg."], "en": ["A voice of one calling: \"In the wilderness prepare the way for the LORD; make straight in the desert a highway for our God.\"", "Isaiah 40:3", "Think about what stands between you and God. Clear one small thing of it out of the way today."]}, {"de": ["Siehe, die Jungfrau wird schwanger werden und einen Sohn geb\u00E4ren und wird ihm den Namen Immanuel geben.", "Jesaja 7,14", "Immanuel heisst \u201EGott mit uns\u201C. Sag heute dreimal leise: Du bist jetzt hier bei mir."], "en": ["The virgin will conceive and give birth to a son, and will call him Immanuel.", "Isaiah 7:14", "Immanuel means \"God with us\". Say quietly three times today: You are here with me right now."]}, {"de": ["Und du, Bethlehem-Ephrata, bist zwar klein unter den Hauptorten von Juda; aber aus dir soll mir hervorkommen, der Herrscher \u00FCber Israel werden soll.", "Micha 5,1", "Gott f\u00E4ngt oft im Kleinen an. Schreib eine Sache auf, die du an dir zu klein findest, und frag Gott, was er darin sieht."], "en": ["But you, Bethlehem Ephrathah, though you are small among the clans of Judah, out of you will come for me one who will be ruler over Israel.", "Micah 5:2", "God often starts small. Write down one thing about yourself that you think is too small, and ask God what he sees in it."]}, {"de": ["Geben ist seliger als Nehmen!", "Apostelgeschichte 20,35", "Heute ist Nikolaustag. Mach jemandem eine kleine \u00DCberraschung, ohne dass die Person weiss, von wem sie ist."], "en": ["It is more blessed to give than to receive.", "Acts 20:35", "Today is St Nicholas Day. Give someone a small surprise without them knowing who it's from."]}, {"de": ["Und es wird ein Reis hervorgehen aus dem Stumpf Isais und ein Sch\u00F6ssling aus seinen Wurzeln Frucht bringen.", "Jesaja 11,1", "Denk an etwas in deinem Leben, das sich gerade abgestorben anf\u00FChlt. Bete daf\u00FCr, dass dort wieder etwas wachsen darf."], "en": ["A shoot will come up from the stump of Jesse; from his roots a Branch will bear fruit.", "Isaiah 11:1", "Think of something in your life that feels dead right now. Pray that something may grow there again."]}, {"de": ["Gnadenbeweise des HERRN sind\u2019s, dass wir nicht g\u00E4nzlich aufgerieben wurden, denn seine Barmherzigkeit ist nicht zu Ende; sie ist jeden Morgen neu, und deine Treue ist gross!", "Klagelieder 3,22\u201323", "Fang morgen fr\u00FCh den Tag mit einem Satz Dank an, bevor du aufs Handy schaust."], "en": ["Because of the LORD\u2019s great love we are not consumed, for his compassions never fail. They are new every morning; great is your faithfulness.", "Lamentations 3:22\u201323", "Tomorrow morning, start the day with one sentence of thanks before you look at your phone."]}, {"de": ["F\u00FCrchte dich nicht, Maria, denn du hast Gnade bei Gott gefunden!", "Lukas 1,30", "Schreib eine Angst auf, die dich gerade begleitet. Lies dann laut: F\u00FCrchte dich nicht. Und setz deinen Namen ein."], "en": ["Do not be afraid, Mary; you have found favor with God.", "Luke 1:30", "Write down a fear that's been with you lately. Then read out loud: Do not be afraid. And put your own name in."]}, {"de": ["Denn bei Gott ist kein Ding unm\u00F6glich.", "Lukas 1,37", "Bete heute f\u00FCr etwas, das dir eigentlich unm\u00F6glich vorkommt. Schreib das Datum dazu und schau im n\u00E4chsten Advent wieder nach."], "en": ["For no word from God will ever fail.", "Luke 1:37", "Pray today for something that seems impossible to you. Write down the date and look at it again next Advent."]}, {"de": ["Siehe, ich bin die Magd des Herrn; mir geschehe nach deinem Wort!", "Lukas 1,38", "Maria hat Ja gesagt, ohne alles zu verstehen. Gibt es etwas, das Gott dir schon l\u00E4nger aufs Herz legt? Sag heute einen kleinen Schritt lang Ja dazu."], "en": ["I am the Lord's servant. May your word to me be fulfilled.", "Luke 1:38", "Mary said yes without understanding everything. Is there something God has been putting on your heart for a while? Say yes to it today with one small step."]}, {"de": ["Meine Seele erhebt den Herrn, und mein Geist jubelt \u00FCber Gott, meinen Retter.", "Lukas 1,46\u201347", "Schreib dein eigenes kleines Loblied: drei Dinge aus diesem Jahr, f\u00FCr die du Gott danken willst."], "en": ["My soul glorifies the Lord and my spirit rejoices in God my Savior.", "Luke 1:46\u201347", "Write your own little song of praise: three things from this year you want to thank God for."]}, {"de": ["Joseph, Sohn Davids, f\u00FCrchte dich nicht, Maria, deine Frau, zu dir zu nehmen.", "Matth\u00E4us 1,20", "Josephs Plan hat sich \u00FCber Nacht ge\u00E4ndert, und er hat trotzdem vertraut. Denk an einen Plan von dir, der anders gekommen ist, und frag dich, was Gott dir darin geschenkt hat."], "en": ["Joseph son of David, do not be afraid to take Mary home as your wife.", "Matthew 1:20", "Joseph's plan changed overnight, and he trusted anyway. Think of a plan of yours that turned out differently, and ask yourself what God gave you through it."]}, {"de": ["Und sie wird einen Sohn geb\u00E4ren, und du sollst ihm den Namen Jesus geben, denn er wird sein Volk retten von ihren S\u00FCnden.", "Matth\u00E4us 1,21", "Nimm dir f\u00FCnf ruhige Minuten und bring Gott ehrlich etwas, das du bereust. Du musst es nicht allein tragen."], "en": ["She will give birth to a son, and you are to give him the name Jesus, because he will save his people from their sins.", "Matthew 1:21", "Take five quiet minutes and honestly bring God something you regret. You don't have to carry it alone."]}, {"de": ["Freut euch im Herrn allezeit; abermals sage ich: Freut euch! Eure Sanftmut lasst alle Menschen erfahren! Der Herr ist nahe!", "Philipper 4,4\u20135", "Sei heute besonders sanft mit einer Person, die dich manchmal nervt."], "en": ["Rejoice in the Lord always. I will say it again: Rejoice! Let your gentleness be evident to all. The Lord is near.", "Philippians 4:4\u20135", "Be especially gentle today with someone who sometimes gets on your nerves."]}, {"de": ["Und das Licht leuchtet in der Finsternis, und die Finsternis hat es nicht begriffen.", "Johannes 1,5", "Sei heute f\u00FCr jemanden ein kleines Licht: eine Nachricht, ein Kaffee oder einfach Zeit."], "en": ["The light shines in the darkness, and the darkness has not overcome it.", "John 1:5", "Be a small light for someone today: a message, a coffee or simply your time."]}, {"de": ["Und das Wort wurde Fleisch und wohnte unter uns, und wir sahen seine Herrlichkeit.", "Johannes 1,14", "Gott ist nicht aus der Ferne geblieben, er ist gekommen. Besuch heute jemanden pers\u00F6nlich, statt nur zu schreiben."], "en": ["The Word became flesh and made his dwelling among us. We have seen his glory.", "John 1:14", "God didn't stay far away, he came. Visit someone in person today instead of only texting."]}, {"de": ["Denn ein Kind ist uns geboren, ein Sohn ist uns gegeben, und die Herrschaft ruht auf seiner Schulter; und man nennt seinen Namen: Wunderbarer, Ratgeber, starker Gott, Ewig-Vater, Friedef\u00FCrst.", "Jesaja 9,5", "Welchen dieser Namen brauchst du gerade am meisten? Sprich Jesus heute in deinem Gebet mit diesem Namen an."], "en": ["For to us a child is born, to us a son is given, and the government will be on his shoulders. And he will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace.", "Isaiah 9:6", "Which of these names do you need most right now? Call Jesus by that name in your prayer today."]}, {"de": ["Und sie gebar ihren Sohn, den Erstgeborenen, und wickelte ihn in Windeln und legte ihn in die Krippe, weil f\u00FCr sie kein Raum war in der Herberge.", "Lukas 2,7", "Mach in deinem Kalender Platz f\u00FCr Gott: Trag dir f\u00FCr die Weihnachtstage eine feste halbe Stunde nur f\u00FCr ihn ein."], "en": ["She gave birth to her firstborn, a son. She wrapped him in cloths and placed him in a manger, because there was no guest room available for them.", "Luke 2:7", "Make room for God in your calendar: block out a fixed half hour just for him over the Christmas days."]}, {"de": ["F\u00FCrchtet euch nicht! Denn siehe, ich verk\u00FCndige euch grosse Freude, die dem ganzen Volk widerfahren soll.", "Lukas 2,10", "Teile heute eine gute Nachricht mit jemandem, eine eigene oder eine aus der Bibel."], "en": ["Do not be afraid. I bring you good news that will cause great joy for all the people.", "Luke 2:10", "Share some good news with someone today, your own or one from the Bible."]}, {"de": ["Herrlichkeit ist bei Gott in der H\u00F6he, und auf Erden Friede, unter den Menschen ein Wohlgefallen!", "Lukas 2,14", "Gibt es jemanden, mit dem du keinen Frieden hast? Mach heute den ersten Schritt, auch wenn es nur eine kurze Nachricht ist."], "en": ["Glory to God in the highest heaven, and on earth peace to those on whom his favor rests.", "Luke 2:14", "Is there someone you're not at peace with? Take the first step today, even if it's just a short message."]}, {"de": ["Maria aber behielt alle diese Worte und bewegte sie in ihrem Herzen.", "Lukas 2,19", "Nimm dir zehn stille Minuten und geh dein Jahr durch. Welche Momente willst du, wie Maria, in deinem Herzen behalten?"], "en": ["But Mary treasured up all these things and pondered them in her heart.", "Luke 2:19", "Take ten quiet minutes and go through your year. Which moments do you want to treasure in your heart, like Mary?"]}, {"de": ["Als sie aber den Stern sahen, wurden sie sehr hoch erfreut.", "Matth\u00E4us 2,10", "Die Weisen haben Jesus Geschenke gebracht. \u00DCberleg dir, was du ihm schenken kannst: deine Zeit, eine Begabung oder ein ehrliches Gebet."], "en": ["When they saw the star, they were overjoyed.", "Matthew 2:10", "The wise men brought Jesus gifts. Think about what you can give him: your time, a gift you have or an honest prayer."]}, {"de": ["Denn so sehr hat Gott die Welt geliebt, dass er seinen eingeborenen Sohn gab, damit jeder, der an ihn glaubt, nicht verloren geht, sondern ewiges Leben hat.", "Johannes 3,16", "Erz\u00E4hl heute jemandem aus deiner Familie oder deinem Freundeskreis, was Weihnachten f\u00FCr dich wirklich bedeutet."], "en": ["For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", "John 3:16", "Tell someone in your family or among your friends today what Christmas really means to you."]}];
+/* Advent calendar: gift n can be unwrapped from n December on (all stay open until 6 January). Test with ?advent=12 */
+const ADVENT = [{"de": ["Wir lieben ihn, weil er uns zuerst geliebt hat.", "1. Johannes 4,19", "Schreib einer Person, die dich zuerst geliebt hat, zum Beispiel deinen Eltern oder Grosseltern, eine kleine Dankeskarte."], "en": ["We love because he first loved us.", "1 John 4:19", "Write a small thank-you card to someone who loved you first, like your parents or grandparents."]}, {"de": ["Die Liebe ist langm\u00FCtig und g\u00FCtig, die Liebe beneidet nicht, die Liebe prahlt nicht, sie bl\u00E4ht sich nicht auf.", "1. Korinther 13,4", "Sei heute bewusst geduldig mit jemandem aus deiner Familie, auch wenn es dir schwerf\u00E4llt."], "en": ["Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", "1 Corinthians 13:4", "Be consciously patient today with someone in your family, even if it's hard."]}, {"de": ["Sie ertr\u00E4gt alles, sie glaubt alles, sie hofft alles, sie duldet alles.", "1. Korinther 13,7", "Schreib einer Freundin oder einem Freund, der es gerade schwer hat, ein paar ermutigende Worte."], "en": ["It always protects, always trusts, always hopes, always perseveres.", "1 Corinthians 13:7", "Send a few encouraging words to a friend who is having a hard time."]}, {"de": ["Geben ist seliger als Nehmen!", "Apostelgeschichte 20,35", "Schenk heute jemandem etwas, ohne etwas zur\u00FCckzuerwarten. Es muss nichts Grosses sein."], "en": ["It is more blessed to give than to receive.", "Acts 20:35", "Give someone something today without expecting anything back. It doesn't have to be big."]}, {"de": ["Jeder, wie er es sich im Herzen vornimmt; nicht widerwillig oder gezwungen, denn einen fr\u00F6hlichen Geber hat Gott lieb!", "2. Korinther 9,7", "Such zu Hause Kleider oder Spielsachen, die noch gut sind, und bring sie zu einer Sammelstelle."], "en": ["Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver.", "2 Corinthians 9:7", "Look for clothes or toys at home that are still in good condition and take them to a donation point."]}, {"de": ["Wenn du aber Almosen gibst, so soll deine Linke nicht wissen, was deine Rechte tut.", "Matth\u00E4us 6,3", "Heute ist Nikolaustag. Leg jemandem heimlich eine kleine \u00DCberraschung hin, wie der heilige Nikolaus."], "en": ["But when you give to the needy, do not let your left hand know what your right hand is doing.", "Matthew 6:3", "Today is St Nicholas Day. Secretly leave a small surprise for someone, just like St Nicholas."]}, {"de": ["Das ist mein Gebot, dass ihr einander liebt, wie ich euch geliebt habe.", "Johannes 15,12", "Ruf heute deine Grosseltern oder eine \u00E4ltere Person an, die sich \u00FCber einen Anruf freut."], "en": ["My command is this: Love each other as I have loved you.", "John 15:12", "Call your grandparents today, or an older person who would be happy to hear from you."]}, {"de": ["Niemand hat gr\u00F6ssere Liebe als die, dass er sein Leben l\u00E4sst f\u00FCr seine Freunde.", "Johannes 15,13", "Schenk einer Freundin oder einem Freund heute deine volle Zeit: ein Treffen, bei dem das Handy in der Tasche bleibt."], "en": ["Greater love has no one than this: to lay down one's life for one's friends.", "John 15:13", "Give a friend your full time today: a meet-up where your phone stays in your bag."]}, {"de": ["Ein Freund liebt zu jeder Zeit, und als Bruder f\u00FCr die Not wird er geboren.", "Spr\u00FCche 17,17", "Melde dich bei einer alten Freundin oder einem alten Freund, von dem du lange nichts geh\u00F6rt hast."], "en": ["A friend loves at all times, and a brother is born for a time of adversity.", "Proverbs 17:17", "Get in touch with an old friend you haven't heard from in a long time."]}, {"de": ["In der Bruderliebe seid herzlich zueinander; in der Ehrerbietung komme einer dem anderen zuvor!", "R\u00F6mer 12,10", "Hilf heute zu Hause mit, bevor jemand fragt: kochen, abwaschen oder den Tisch decken."], "en": ["Be devoted to one another in love. Honor one another above yourselves.", "Romans 12:10", "Help out at home today before anyone asks: cooking, washing up or setting the table."]}, {"de": ["Ehre deinen Vater und deine Mutter, damit deine Tage verl\u00E4ngert werden in dem Land, das dir der HERR, dein Gott, gibt!", "2. Mose 20,12", "Sag deinen Eltern heute, wof\u00FCr du ihnen dankbar bist. Ganz ehrlich und ganz konkret."], "en": ["Honor your father and your mother, so that you may live long in the land the LORD your God is giving you.", "Exodus 20:12", "Tell your parents today what you're grateful to them for. Honestly and specifically."]}, {"de": ["\u00DCber dies alles aber zieht die Liebe an, die das Band der Vollkommenheit ist.", "Kolosser 3,14", "Back mit deiner Familie oder deinen Freunden Weihnachtsguetzli und verschenkt einen Teil davon."], "en": ["And over all these virtues put on love, which binds them all together in perfect unity.", "Colossians 3:14", "Bake Christmas cookies with your family or friends and give some of them away."]}, {"de": ["Seid aber gegeneinander freundlich und barmherzig und vergebt einander, gleichwie auch Gott euch vergeben hat in Christus.", "Epheser 4,32", "Gibt es jemanden, dem du noch etwas nachtr\u00E4gst? Vergib der Person heute, im Gebet oder mit einer Nachricht."], "en": ["Be kind and compassionate to one another, forgiving each other, just as in Christ God forgave you.", "Ephesians 4:32", "Is there someone you're still holding something against? Forgive them today, in prayer or with a message."]}, {"de": ["Die Gastfreundschaft vergesst nicht; denn durch sie haben etliche ohne ihr Wissen Engel beherbergt.", "Hebr\u00E4er 13,2", "Lade jemanden zu dir ein, der in der Adventszeit oft allein ist, zum Tee oder zum Essen."], "en": ["Do not forget to show hospitality to strangers, for by so doing some people have shown hospitality to angels without knowing it.", "Hebrews 13:2", "Invite someone who is often alone during Advent over for tea or a meal."]}, {"de": ["Einer trage des anderen Lasten, und so sollt ihr das Gesetz des Christus erf\u00FCllen!", "Galater 6,2", "Frag jemanden in deinem Umfeld ganz praktisch: Wobei kann ich dir diese Woche helfen?"], "en": ["Carry each other's burdens, and in this way you will fulfill the law of Christ.", "Galatians 6:2", "Ask someone around you very practically: what can I help you with this week?"]}, {"de": ["Wahrlich, ich sage euch: Was ihr einem dieser meiner geringsten Br\u00FCder getan habt, das habt ihr mir getan!", "Matth\u00E4us 25,40", "Pack ein Weihnachtsp\u00E4ckli f\u00FCr Menschen in Not oder kauf beim Einkaufen etwas mehr f\u00FCr die Lebensmittelsammlung."], "en": ["Truly I tell you, whatever you did for one of the least of these brothers and sisters of mine, you did for me.", "Matthew 25:40", "Pack a Christmas parcel for people in need, or buy a little extra for the food collection when you go shopping."]}, {"de": ["Meine Kinder, lasst uns nicht mit Worten lieben noch mit der Zunge, sondern in Tat und Wahrheit!", "1. Johannes 3,18", "Zeig heute einer Person deine Liebe mit einer Tat statt mit Worten. \u00DCberleg dir, was ihr wirklich Freude macht."], "en": ["Dear children, let us not love with words or speech but with actions and in truth.", "1 John 3:18", "Show someone your love today with an action instead of words. Think about what would really make them happy."]}, {"de": ["Vor allem aber habt innige Liebe zueinander; denn die Liebe deckt eine Menge von S\u00FCnden zu.", "1. Petrus 4,8", "Lass heute einen Fehler von jemandem aus deiner Familie einfach stehen, ohne ihn anzusprechen."], "en": ["Above all, love each other deeply, because love covers over a multitude of sins.", "1 Peter 4:8", "Let a mistake by someone in your family go today, without bringing it up."]}, {"de": ["Siehe, wie fein und lieblich ist's, wenn Br\u00FCder in Eintracht beisammen wohnen!", "Psalm 133,1", "Mach heute einen Spieleabend oder einen gem\u00FCtlichen Abend mit deiner Familie oder deiner WG."], "en": ["How good and pleasant it is when God's people live together in unity!", "Psalm 133:1", "Have a games night or a cosy evening with your family or your flatmates today."]}, {"de": ["F\u00FCrchtet euch nicht! Denn siehe, ich verk\u00FCndige euch grosse Freude, die dem ganzen Volk widerfahren soll.", "Lukas 2,10", "Schreib Weihnachtskarten an deine Freunde und erz\u00E4hl darin, wor\u00FCber du dich in diesem Jahr gefreut hast."], "en": ["Do not be afraid. I bring you good news that will cause great joy for all the people.", "Luke 2:10", "Write Christmas cards to your friends and tell them what brought you joy this year."]}, {"de": ["Herrlichkeit ist bei Gott in der H\u00F6he, und auf Erden Friede, unter den Menschen ein Wohlgefallen!", "Lukas 2,14", "Gibt es jemanden, mit dem du keinen Frieden hast? Mach heute den ersten Schritt, auch wenn es nur eine kurze Nachricht ist."], "en": ["Glory to God in the highest heaven, and on earth peace to those on whom his favor rests.", "Luke 2:14", "Is there someone you're not at peace with? Take the first step today, even if it's just a short message."]}, {"de": ["Und sie gebar ihren Sohn, den Erstgeborenen, und wickelte ihn in Windeln und legte ihn in die Krippe, weil f\u00FCr sie kein Raum war in der Herberge.", "Lukas 2,7", "F\u00FCr Maria und Joseph gab es keinen Platz. Mach an Weihnachten Platz f\u00FCr jemanden, der sonst allein feiern w\u00FCrde."], "en": ["She gave birth to her firstborn, a son. She wrapped him in cloths and placed him in a manger, because there was no guest room available for them.", "Luke 2:7", "There was no room for Mary and Joseph. Make room at Christmas for someone who would otherwise celebrate alone."]}, {"de": ["Jede gute Gabe und jedes vollkommene Geschenk kommt von oben herab, von dem Vater der Lichter.", "Jakobus 1,17", "Schreib auf, welche Menschen f\u00FCr dich ein Geschenk von Gott sind. Sag es heute mindestens einer davon."], "en": ["Every good and perfect gift is from above, coming down from the Father of the heavenly lights.", "James 1:17", "Write down which people are a gift from God to you. Tell at least one of them today."]}, {"de": ["Denn so sehr hat Gott die Welt geliebt, dass er seinen eingeborenen Sohn gab, damit jeder, der an ihn glaubt, nicht verloren geht, sondern ewiges Leben hat.", "Johannes 3,16", "Gott hat uns das gr\u00F6sste Geschenk gemacht. Leg heute zu einem Geschenk eine handgeschriebene Karte, auf der steht, warum du die Person lieb hast."], "en": ["For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", "John 3:16", "God gave us the greatest gift. Today, add a handwritten card to one of your presents saying why you love that person."]}];
 const ORDER = [17,5,22,9,1,14,20,3,11,24,7,15,2,19,10,23,6,13,8,21,4,16,12,18];
 let advSel = null;
+const advModal = document.getElementById("adv-modal"), advCard = document.getElementById("adv-card");
 function adventToday(){
   try { const t = new URLSearchParams(location.search).get("advent"); if (t && /^\d{1,2}$/.test(t)) return Math.min(+t, 31); } catch (e) {}
   const d = new Date();
@@ -3264,47 +3301,61 @@ function adventToday(){
   return 0;
 }
 function advSeen(){ try { return JSON.parse(localStorage.getItem("belight-advent") || "[]"); } catch (e) { return []; } }
+function advStatus(){
+  const today = adventToday(), st = document.getElementById("adv-status");
+  if (today === 0) st.textContent = lang === "de" ? "Der Kalender startet am 1. Dezember. Bis dahin sind alle Geschenke noch verpackt." : "The calendar starts on 1 December. Until then, all gifts are still wrapped.";
+  else if (today <= 24) st.textContent = lang === "de" ? `Heute ist der ${today}. Dezember. Geschenk ${today} wartet auf dich.` : `Today is ${today} December. Gift ${today} is waiting for you.`;
+  else st.textContent = lang === "de" ? "Frohe Weihnachten! Alle Geschenke sind offen." : "Merry Christmas! All gifts are open.";
+}
+function fillCard(){
+  if (!advSel) return;
+  const c = ADVENT[advSel - 1][lang];
+  document.getElementById("adv-day").textContent = lang === "de" ? `${advSel}. Dezember` : `${advSel} December`;
+  document.getElementById("adv-verse").textContent = lang === "de" ? "\u201E" + c[0] + "\u201C" : "\u201C" + c[0] + "\u201D";
+  document.getElementById("adv-ref").textContent = c[1];
+  document.getElementById("adv-task").textContent = c[2];
+  document.getElementById("adv-close").setAttribute("aria-label", lang === "de" ? "Schliessen" : "Close");
+}
+function openCard(n){
+  advSel = n; fillCard();
+  advCard.setAttribute("aria-pressed", "false");
+  advModal.hidden = false; advCard.focus();
+}
+function closeCard(){ advModal.hidden = true; advSel = null; renderAdvent(); }
+advCard.addEventListener("click", () => advCard.setAttribute("aria-pressed", advCard.getAttribute("aria-pressed") !== "true"));
+document.getElementById("adv-close").addEventListener("click", closeCard);
+advModal.addEventListener("click", e => { if (e.target === advModal) closeCard(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !advModal.hidden) closeCard(); });
+window.addEventListener("hashchange", () => { if (!advModal.hidden) { advModal.hidden = true; advSel = null; } });
 function renderAdvent(){
   const today = adventToday(), seen = advSeen(), grid = document.getElementById("adv-grid");
-  const st = document.getElementById("adv-status");
-  if (today === 0) st.textContent = lang === "de" ? "Der Kalender startet am 1. Dezember. Bis dahin sind alle T\u00FCrchen noch zu." : "The calendar starts on 1 December. Until then, all doors are still closed.";
-  else if (today <= 24) st.textContent = lang === "de" ? `Heute ist der ${today}. Dezember. T\u00FCrchen ${today} ist offen.` : `Today is ${today} December. Door ${today} is open.`;
-  else st.textContent = lang === "de" ? "Frohe Weihnachten! Alle T\u00FCrchen sind offen." : "Merry Christmas! All doors are open.";
+  advStatus(); fillCard();
   grid.innerHTML = "";
   ORDER.forEach(n => {
     const b = document.createElement("button");
-    b.type = "button"; b.className = "door"; b.textContent = n;
+    b.type = "button"; b.className = "gift";
+    b.innerHTML = '<span class="box"></span><span class="lid"></span><span class="tag">' + n + '</span>';
     const open = today >= n;
     if (!open) b.setAttribute("aria-disabled", "true");
     if (n === today) b.classList.add("today");
     if (seen.includes(n)) b.classList.add("seen");
-    if (n === advSel) b.classList.add("active");
-    b.setAttribute("aria-label", (lang === "de" ? "T\u00FCrchen " : "Door ") + n + (open ? "" : (lang === "de" ? ", noch geschlossen" : ", still closed")));
+    b.setAttribute("aria-label", (lang === "de" ? "Geschenk " : "Gift ") + n + (open ? "" : (lang === "de" ? ", noch verpackt" : ", still wrapped")));
     b.addEventListener("click", () => {
       if (!open) {
         b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
-        const wait = today === 0 ? null : n - today;
+        const wait = today === 0 ? null : n - today, st = document.getElementById("adv-status");
         st.textContent = lang === "de"
-          ? (wait ? `T\u00FCrchen ${n} geht erst am ${n}. Dezember auf. Noch ${wait} ${wait === 1 ? "Tag" : "Tage"} Geduld.` : `T\u00FCrchen ${n} geht am ${n}. Dezember auf.`)
-          : (wait ? `Door ${n} only opens on ${n} December. ${wait} more ${wait === 1 ? "day" : "days"} to wait.` : `Door ${n} opens on ${n} December.`);
+          ? (wait ? `Geschenk ${n} darfst du erst am ${n}. Dezember auspacken. Noch ${wait} ${wait === 1 ? "Tag" : "Tage"} Geduld.` : `Geschenk ${n} darfst du am ${n}. Dezember auspacken.`)
+          : (wait ? `You can only unwrap gift ${n} on ${n} December. ${wait} more ${wait === 1 ? "day" : "days"} to wait.` : `You can unwrap gift ${n} on ${n} December.`);
         return;
       }
-      advSel = n;
       try { const s = advSeen(); if (!s.includes(n)) { s.push(n); localStorage.setItem("belight-advent", JSON.stringify(s)); } } catch (e) {}
-      renderAdvent();
-      document.getElementById("adv-open").scrollIntoView({behavior:"smooth", block:"nearest"});
+      if (b.classList.contains("seen")) { openCard(n); return; }
+      b.classList.add("unwrap");
+      setTimeout(() => openCard(n), 650);
     });
     grid.appendChild(b);
   });
-  const box = document.getElementById("adv-open");
-  if (advSel) {
-    const c = ADVENT[advSel - 1][lang];
-    document.getElementById("adv-day").textContent = lang === "de" ? `${advSel}. Dezember` : `${advSel} December`;
-    document.getElementById("adv-verse").textContent = lang === "de" ? "\u201E" + c[0] + "\u201C" : "\u201C" + c[0] + "\u201D";
-    document.getElementById("adv-ref").textContent = c[1];
-    document.getElementById("adv-task").textContent = c[2];
-    box.hidden = false;
-  } else box.hidden = true;
 }
 
 /* Language switch */
